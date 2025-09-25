@@ -84,10 +84,13 @@
                             <div class="iframe-loader">Memuat...</div>
                             <iframe loading="lazy" data-src="${item.link}" frameborder="0" allowfullscreen title="CCTV Live Stream"></iframe>
                         </div>
-                        <div class="status-indicator mt-2">
-                            <div class="status-dot"></div>
-                            <span>${item.active ? 'Online' : 'Offline'}</span>
-                        </div>
+                        <!-- STATUS DISPLAY DISABLED: Untuk menonaktifkan sementara tampilan status Online/Offline
+                             Untuk mengaktifkan kembali, kembalikan blok HTML berikut:
+                             <div class="status-indicator mt-2">
+                                 <div class="status-dot"></div>
+                                 <span>${item.active ? 'Online' : 'Offline'}</span>
+                             </div>
+                        -->
                     </div>
                 </div>
             `;
@@ -140,7 +143,8 @@
             // Sync sidebar checkbox
             const sidebarCheckbox = document.getElementById('checkbox-' + cardEl.id);
             if (sidebarCheckbox) sidebarCheckbox.checked = true;
-            // Update status text/dot to reflect online state
+            /* STATUS UPDATES DISABLED: blok berikut men-set teks "Online" dan warna dot.
+               Untuk mengaktifkan kembali, hapus komentar ini dan restore isi try/catch.
             try {
                 const statusSpan = cardEl.querySelector('.status-indicator span');
                 const statusDot = cardEl.querySelector('.status-dot');
@@ -148,7 +152,8 @@
                 if (statusDot) {
                     statusDot.style.background = getComputedStyle(document.documentElement).getPropertyValue('--success-color') || '#27ae60';
                 }
-            } catch (e) { /* ignore */ }
+            } catch (e) { }
+            */
             updateSchoolEyeIcon(cardEl.dataset.sekolah);
             updateHideAllButtonState();
             updateActiveCCTVCount();
@@ -163,7 +168,8 @@
                 if (cardToggle) cardToggle.checked = false;
             const sidebarCheckbox = document.getElementById('checkbox-' + cardEl.id);
             if (sidebarCheckbox) sidebarCheckbox.checked = false;
-            // Update status text/dot to reflect offline state
+            /* STATUS UPDATES DISABLED: blok berikut men-set teks "Offline" dan warna dot.
+               Untuk mengaktifkan kembali, hapus komentar ini dan restore isi try/catch.
             try {
                 const statusSpan = cardEl.querySelector('.status-indicator span');
                 const statusDot = cardEl.querySelector('.status-dot');
@@ -171,7 +177,8 @@
                 if (statusDot) {
                     statusDot.style.background = '#6c757d';
                 }
-            } catch (e) { /* ignore */ }
+            } catch (e) { }
+            */
             updateSchoolEyeIcon(cardEl.dataset.sekolah);
             updateHideAllButtonState();
             updateActiveCCTVCount();
@@ -406,25 +413,27 @@
                     if (cardCheckbox) cardCheckbox.checked = true;
                 const iframe = card.querySelector('iframe');
                 if (iframe && !iframe.src) iframe.src = iframe.dataset.src;
-                // mark online
+                /* STATUS UPDATES DISABLED: mark online block
                 try {
                     const statusSpan = card.querySelector('.status-indicator span');
                     const statusDot = card.querySelector('.status-dot');
                     if (statusSpan) statusSpan.textContent = 'Online';
                     if (statusDot) statusDot.style.background = getComputedStyle(document.documentElement).getPropertyValue('--success-color') || '#27ae60';
                 } catch (e) {}
+                */
             } else {
                 card.style.display = 'none';
                 card.dataset.isActive = '0';
                     const cardCheckbox = getCardCheckbox(card);
                     if (cardCheckbox) cardCheckbox.checked = false;
-                // mark offline
+                /* STATUS UPDATES DISABLED: mark offline block
                 try {
                     const statusSpan = card.querySelector('.status-indicator span');
                     const statusDot = card.querySelector('.status-dot');
                     if (statusSpan) statusSpan.textContent = 'Offline';
                     if (statusDot) statusDot.style.background = '#6c757d';
                 } catch (e) {}
+                */
             }
 
             const sekolahSlug = card.dataset.sekolah;

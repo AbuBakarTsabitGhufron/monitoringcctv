@@ -45,11 +45,13 @@
                 </div>
             </div>
             <div class="ms-auto navbar-status">
+                {{--
                 <div class="online-row">
                     <span class="badge bg-success">
                         <i class="fas fa-circle me-1"></i>Online
                     </span>
                 </div>
+                --}}
                 <div class="time-row text-muted pt-1">
                     <i class="fas fa-clock me-1"></i>
                     <span id="currentTime"></span>
