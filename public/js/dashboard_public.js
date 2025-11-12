@@ -70,30 +70,38 @@
             // Resolve display name: prefer explicit sekolah, then mapped wilayah name, then raw wilayah
             const sekolahName = item.sekolah || (window.namaWilayahLengkap ? (window.namaWilayahLengkap[item.wilayah] || item.wilayah) : (item.wilayah || ''));
             wrap.innerHTML = `
-                <div class="card shadow-sm h-100">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="mb-0 fw-bold">${sekolahName}</h6>
-                            <label class="toggle-switch">
-                                <input type="checkbox" ${item.active ? 'checked' : ''} onchange="toggleCCTV(this, '${item.cardId}')">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <p class="text-center mb-2" style="font-size: 0.8rem;">${shortNameOf(item.titik) || (item.titik || '(tidak ada nama titik)')}</p>
-                        <div class="iframe-container">
-                            <div class="iframe-loader">Memuat...</div>
-                            <iframe loading="lazy" data-src="${item.link}" frameborder="0" allowfullscreen title="CCTV Live Stream"></iframe>
-                        </div>
-                        <!-- STATUS DISPLAY DISABLED: Untuk menonaktifkan sementara tampilan status Online/Offline
-                             Untuk mengaktifkan kembali, kembalikan blok HTML berikut:
-                             <div class="status-indicator mt-2">
-                                 <div class="status-dot"></div>
-                                 <span>${item.active ? 'Online' : 'Offline'}</span>
-                             </div>
-                        -->
-                    </div>
+        <div class="card shadow-sm h-100">
+            <div class="card-body p-2">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0 fw-bold">${sekolahName}</h6>
+                    <label class="toggle-switch">
+                        <input type="checkbox" ${item.active ? 'checked' : ''} onchange="toggleCCTV(this, '${item.cardId}')">
+                        <span class="slider"></span>
+                    </label>
                 </div>
-            `;
+                <p class="text-center mb-2" style="font-size: 0.8rem;">${shortNameOf(item.titik) || (item.titik || '(tidak ada nama titik)')}</p>
+                <div class="iframe-container">
+                    <div class="iframe-loader">Memuat...</div>
+                    <iframe loading="lazy" data-src="${item.link}" frameborder="0" allowfullscreen title="CCTV Live Stream"></iframe>
+                </div>
+
+                <!-- ✅ STATUS ONLINE/OFFLINE -->
+                <div class="status-indicator mt-2 text-center">
+                    <div class="status-dot" style="
+                        display:inline-block;
+                        width:10px;
+                        height:10px;
+                        border-radius:50%;
+                        background-color:${item.active ? 'limegreen' : 'gray'};
+                        margin-right:5px;
+                    "></div>
+                    <span style="font-size:0.8rem; font-weight:600; color:${item.active ? 'limegreen' : 'gray'};">
+                        ${item.active ? 'Online' : 'Offline'}
+                    </span>
+                </div>
+            </div>
+        </div>
+    `;
             grid.appendChild(wrap);
         }
 
