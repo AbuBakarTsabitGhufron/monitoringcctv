@@ -51,7 +51,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
-    <link href="{{ asset('css/sekolah.css') }}" rel="stylesheet">
+    <link href="{{ asset("css/lokasi.css")') }}" rel="stylesheet">
     <style>
     /* Force primary color to Bootstrap blue on this page to match Sekolah */
     :root {
@@ -151,9 +151,9 @@
                     <div class="col-8">
                         <div class="search-box">
                             <i class="fas fa-search"></i>
-                            <!-- gunakan id khusus untuk Panorama agar tidak bertabrakan dengan halaman Sekolah -->
+                            <!-- gunakan id khusus untuk Panorama agar tidak bertabrakan dengan halaman Lokasi -->
                                 <input type="text" class="form-control form-control-sm" id="sidebarSearchInputPanorama" placeholder="Cari..." style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; font-size: 0.8rem; padding: 8px 15px 8px 35px;">
-                                <!-- khusus Panorama: gunakan id berbeda agar tidak konflik dengan halaman Sekolah -->
+                                <!-- khusus Panorama: gunakan id berbeda agar tidak konflik dengan halaman Lokasi -->
                         </div>
                     </div>
                     <div class="col-4">
@@ -294,8 +294,8 @@
                         <h5 class="mb-3"><i class="fas fa-video text-primary me-2"></i>Live Panorama Monitoring</h5>
                     </div>
                     <div class="col-md-6 text-md-end">
-                        <a href="{{ route('sekolah.sekolah') }}" class="btn btn-sm btn-outline-primary me-2" title="Buka CCTV Sekolah" aria-label="Buka CCTV Sekolah">
-                            <i class="fas fa-video me-1"></i> CCTV Sekolah
+                        <a href="{{ route('lokasi.index') }}" class="btn btn-sm btn-outline-primary me-2" title="Buka CCTV Lokasi" aria-label="Buka CCTV Lokasi">
+                            <i class="fas fa-video me-1"></i> CCTV Lokasi
                         </a>
                     </div>
                 </div>
@@ -330,10 +330,10 @@
         function createCardHTML(item) {
             const shortTitik = shortNameOf(item.titik);
             const fullWilayah = window.namaWilayahLengkap[item.wilayah] || item.wilayah;
-            const sekolahSlug = slugify(item.wilayah);
+            const lokasiSlug = slugify(item.wilayah);
 
             return `
-                <div class="col-lg-3 col-md-4 col-sm-6 cctv-card" id="${item.cardId}" data-sekolah="${sekolahSlug}" data-wilayah="${item.wilayah}" data-titik="${item.titik}" style="display: none;">
+                <div class="col-lg-3 col-md-4 col-sm-6 cctv-card" id="${item.cardId}" data-lokasi="${lokasiSlug}" data-wilayah="${item.wilayah}" data-titik="${item.titik}" style="display: none;">
                     <div class="card shadow-sm h-100">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title-text">

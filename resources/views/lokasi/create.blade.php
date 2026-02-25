@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah CCTV Sekolah</title>
+    <title>Tambah CCTV Lokasi</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
@@ -110,9 +110,9 @@
 
 <body>
     <div class="container">
-        <h2>TAMBAH CCTV SEKOLAH</h2>
+        <h2>TAMBAH CCTV LOKASI</h2>
         <div class="card-form">
-            <form id="cctvForm" action="{{ route('sekolah.store') }}" method="POST">
+            <form id="cctvForm" action="{{ route('lokasi.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <label for="namaWilayah">Nama Wilayah</label>
@@ -126,8 +126,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="namaSekolah">Nama Sekolah</label>
-                    <input type="text" class="form-control" id="namaSekolah" name="namaSekolah" required>
+                    <label for="namaLokasi">Nama Lokasi</label>
+                    <input type="text" class="form-control" id="namaLokasi" name="namaLokasi" required>
                 </div>
                 <div class="form-group">
                     <label for="namaTitik">Nama Titik</label>
@@ -155,7 +155,7 @@
                 }
 
                 $.ajax({
-                    url: "{{ route('sekolah.checkDuplicate') }}",
+                    url: "{{ route('lokasi.checkDuplicate') }}",
                     type: "GET",
                     data: { field: "link", value: value },
                     success: function (response) {

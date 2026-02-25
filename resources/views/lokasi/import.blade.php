@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mt-4">
-    <h4>Import Excel Sekolah</h4>
+    <h4>Import Excel Lokasi</h4>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -11,7 +11,7 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    <form action="{{ route('sekolah.import.manual') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('lokasi.import.manual') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
             <label for="file" class="form-label">Upload Excel (.xlsx)</label>

@@ -16,7 +16,9 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call([
             UserSeeder::class,
-            SekolahSeeder::class
+            WilayahSeeder::class,
+            // LokasiSeeder::class, // Data lokasi akan diimport dari Excel
+            // CctvSeeder::class, // Data CCTV akan diimport dari Excel
         ]);
     }
 }

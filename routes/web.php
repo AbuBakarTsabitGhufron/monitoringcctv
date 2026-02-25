@@ -8,7 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetController;
-use App\Http\Controllers\SekolahController;
+use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\PanoramaController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\CctvController;
@@ -38,17 +38,17 @@ Route::middleware('guest')->group(function () {
 // 🔒 AUTH ROUTES
 // =====================
 Route::middleware('auth')->group(function () {
-    Route::get('/', [SekolahController::class, 'cctvsekolah'])->name('sekolah.sekolah');
+    Route::get('/', [LokasiController::class, 'cctvlokasi'])->name('lokasi.index');
     Route::get('/cctv-publik', [PanoramaController::class, 'dashboard'])->name('panorama.panorama');
 
-    Route::get('/dashboard', [SekolahController::class, 'dashboard'])
+    Route::get('/dashboard', [LokasiController::class, 'dashboard'])
         ->middleware('role:admin')
         ->name('dashboard');
 
 
     Route::get('user-management', fn() => view('users.menu-users'))->name('user-management');
 
-    Route::get('cctv-sekolah', [SekolahController::class, 'index'])->name('menu-sekolah');
+    Route::get('cctv-lokasi', [LokasiController::class, 'index'])->name('menu-lokasi');
     Route::get('menu-cctv-panorama', [PanoramaController::class, 'index'])->name('menu-panorama');
 
     Route::get('billing', fn() => view('billing'))->name('billing');
@@ -94,30 +94,30 @@ Route::prefix('cctv')->group(function () {
 });
 
 // =====================
-// 🏫 SEKOLAH ROUTES
+// 📍 LOKASI ROUTES
 // =====================
-Route::prefix('sekolah')->group(function () {
-    Route::get('/index', [SekolahController::class, 'index'])->name('sekolah.index');
-    Route::get('/create', [SekolahController::class, 'create'])->name('sekolah.create');
-    Route::post('/', [SekolahController::class, 'store'])->name('sekolah.store');
-    Route::get('/edit/{sekolah}', [SekolahController::class, 'edit'])->name('sekolah.edit');
-    Route::post('/{sekolah}', [SekolahController::class, 'update'])->name('sekolah.update');
-    Route::delete('/{sekolah}', [SekolahController::class, 'delete'])->name('sekolah.delete');
+Route::prefix('lokasi')->group(function () {
+    Route::get('/index', [LokasiController::class, 'index'])->name('lokasi.index');
+    Route::get('/create', [LokasiController::class, 'create'])->name('lokasi.create');
+    Route::post('/', [LokasiController::class, 'store'])->name('lokasi.store');
+    Route::get('/edit/{lokasi}', [LokasiController::class, 'edit'])->name('lokasi.edit');
+    Route::post('/{lokasi}', [LokasiController::class, 'update'])->name('lokasi.update');
+    Route::delete('/{lokasi}', [LokasiController::class, 'delete'])->name('lokasi.delete');
 
-    Route::get('/check-duplicate', [SekolahController::class, 'checkDuplicate'])->name('sekolah.checkDuplicate');
-    Route::get('/getWilayah', [SekolahController::class, 'getWilayah'])->name('sekolah.getWilayah');
-    Route::get('/search', [SekolahController::class, 'search'])->name('sekolah.search');
-    Route::get('/cctv/export', [SekolahController::class, 'export'])->name('sekolah.export');
-    Route::get('/template/download', [TemplateController::class, 'download'])->name('sekolah.template.download');
+    Route::get('/check-duplicate', [LokasiController::class, 'checkDuplicate'])->name('lokasi.checkDuplicate');
+    Route::get('/getWilayah', [LokasiController::class, 'getWilayah'])->name('lokasi.getWilayah');
+    Route::get('/search', [LokasiController::class, 'search'])->name('lokasi.search');
+    Route::get('/cctv/export', [LokasiController::class, 'export'])->name('lokasi.export');
+    Route::get('/template/download', [TemplateController::class, 'download'])->name('lokasi.template.download');
 
     // Import manual
-    Route::get('/import/manual', [ManualImportController::class, 'form'])->name('sekolah.import.manual.form');
-    Route::post('/import/manual', [ManualImportController::class, 'import'])->name('sekolah.import.manual');
+    Route::get('/import/manual', [ManualImportController::class, 'form'])->name('lokasi.import.manual.form');
+    Route::post('/import/manual', [ManualImportController::class, 'import'])->name('lokasi.import.manual');
 });
 
-// Rekapan Sekolah
-Route::get('/rekapan/cctv-sekolah', [SekolahController::class, 'showRekapanCCTV'])->name('rekapan.cctv.sekolah');
-Route::get('/rekapan/detailsekolah', [SekolahController::class, 'daftarSekolah'])->name('rekapan.detailsekolah');
+// Rekapan Lokasi
+Route::get('/rekapan/cctv-lokasi', [LokasiController::class, 'showRekapanCCTV'])->name('rekapan.cctv.lokasi');
+Route::get('/rekapan/detaillokasi', [LokasiController::class, 'daftarLokasi'])->name('rekapan.detaillokasi');
 
 // =====================
 // 🌄 PANORAMA ROUTES

@@ -3,13 +3,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="panoramaModalLabel">Tambah CCTV Sekolah</h5>
+                <h5 class="modal-title" id="panoramaModalLabel">Tambah CCTV Lokasi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="panoramaForm" method="POST">
                     @csrf
-                    <input type="hidden" id="idSekolah">
+                    <input type="hidden" id="idLokasi">
                     <div class="mb-3">
                         <label for="namaWilayah" class="form-label">Nama Wilayah</label>
                         <select class="form-control" id="namaWilayah" name="namaWilayah" required>

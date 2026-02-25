@@ -61,19 +61,19 @@
             const wrap = document.createElement('div');
             wrap.className = 'cctv-card';
             wrap.id = item.cardId;
-                // Accept either a provided sekolahSlug or derive one from the wilayah/name
-                wrap.dataset.sekolah = item.sekolahSlug || (typeof slugify === 'function' ? slugify(item.wilayah || item.sekolah || '') : (item.wilayah || item.sekolah || ''));
+                // Accept either a provided lokasiSlug or derive one from the wilayah/name
+                wrap.dataset.lokasi = item.lokasiSlug || (typeof slugify === 'function' ? slugify(item.wilayah || item.lokasi || '') : (item.wilayah || item.lokasi || ''));
             wrap.dataset.wilayah = item.wilayah;
             wrap.dataset.titik = item.titik;
             wrap.dataset.isActive = item.active ? '1' : '0';
             wrap.style.display = 'none';
-            // Resolve display name: prefer explicit sekolah, then mapped wilayah name, then raw wilayah
-            const sekolahName = item.sekolah || (window.namaWilayahLengkap ? (window.namaWilayahLengkap[item.wilayah] || item.wilayah) : (item.wilayah || ''));
+            // Resolve display name: prefer explicit lokasi, then mapped wilayah name, then raw wilayah
+            const lokasiName = item.lokasi || (window.namaWilayahLengkap ? (window.namaWilayahLengkap[item.wilayah] || item.wilayah) : (item.wilayah || ''));
             wrap.innerHTML = `
         <div class="card shadow-sm h-100">
             <div class="card-body p-2">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="mb-0 fw-bold">${sekolahName}</h6>
+                    <h6 class="mb-0 fw-bold">${lokasiName}</h6>
                     <label class="toggle-switch">
                         <input type="checkbox" ${item.active ? 'checked' : ''} onchange="toggleCCTV(this, '${item.cardId}')">
                         <span class="slider"></span>
@@ -162,7 +162,7 @@
                 }
             } catch (e) { }
             */
-            updateSchoolEyeIcon(cardEl.dataset.sekolah);
+            updateSchoolEyeIcon(cardEl.dataset.lokasi);
             updateHideAllButtonState();
             updateActiveCCTVCount();
             saveActiveCCTVState();
@@ -187,7 +187,7 @@
                 }
             } catch (e) { }
             */
-            updateSchoolEyeIcon(cardEl.dataset.sekolah);
+            updateSchoolEyeIcon(cardEl.dataset.lokasi);
             updateHideAllButtonState();
             updateActiveCCTVCount();
             saveActiveCCTVState();
@@ -224,7 +224,7 @@
             icon.classList.remove('fa-eye', 'fa-eye-slash');
             // ada yang tampil => tombol “Sembunyikan” aktif (ikon eye-slash), tidak ada => ikon eye
             icon.classList.add(hasVisible ? 'fa-eye-slash' : 'fa-eye');
-            // Toggle visual 'active' state to match Sekolah theme
+            // Toggle visual 'active' state to match Lokasi theme
             if (hasVisible) {
                 btn.classList.add('active-hide');
             } else {
@@ -232,11 +232,11 @@
             }
         }
 
-        // Ikon per-sekolah berdasarkan visibilitas kartu di grid
-        function updateSchoolEyeIcon(sekolahSlug) {
-            const eye = document.getElementById('eye-' + sekolahSlug);
+        // Ikon per-lokasi berdasarkan visibilitas kartu di grid
+        function updateSchoolEyeIcon(lokasiSlug) {
+            const eye = document.getElementById('eye-' + lokasiSlug);
             if (!eye) return;
-            const anyVisible = Array.from(document.querySelectorAll(`#cctvGrid .cctv-card[data-sekolah="${sekolahSlug}"]`))
+            const anyVisible = Array.from(document.querySelectorAll(`#cctvGrid .cctv-card[data-lokasi="${lokasiSlug}"]`))
                 .some(card => (card.dataset && card.dataset.isActive === '1') || (card.style && card.style.display && card.style.display !== 'none'));
             eye.classList.remove('fa-eye', 'fa-eye-slash');
             eye.classList.add(anyVisible ? 'fa-eye' : 'fa-eye-slash');
@@ -264,7 +264,7 @@
             }
             // Sync icons/counts
             updateHideAllButtonState();
-            if (el && el.dataset && el.dataset.sekolah) updateSchoolEyeIcon(el.dataset.sekolah);
+            if (el && el.dataset && el.dataset.lokasi) updateSchoolEyeIcon(el.dataset.lokasi);
         }
 
         function hideAllVisibleCCTV() {
@@ -283,7 +283,7 @@
                 }
             });
 
-            // Sinkronkan semua ikon mata per-sekolah setelah disembunyikan
+            // Sinkronkan semua ikon mata per-lokasi setelah disembunyikan
             document.querySelectorAll('[id^="eye-"]').forEach(icon => {
                 const slug = icon.id.replace('eye-', '');
                 updateSchoolEyeIcon(slug);
@@ -295,8 +295,8 @@
         }
 
         // Fungsi untuk memilih CCTV dari sidebar
-        function selectCCTV(namaSekolah, namaTitik) {
-            const targetId = `${slugify(namaSekolah)}-${slugify(namaTitik)}`;
+        function selectCCTV(namaLokasi, namaTitik) {
+            const targetId = `${slugify(namaLokasi)}-${slugify(namaTitik)}`;
             // Pastikan kartu tersedia / dirender
             if (!ensureCardRenderedById(targetId)) return;
             const selectedCCTV = document.getElementById(targetId);
@@ -326,13 +326,13 @@
             saveActiveCCTVState();
         }
 
-        // Fungsi untuk menampilkan semua CCTV di sekolah tertentu
-        function toggleAllSchoolCCTV(namaSekolah) {
-                    const schoolSlug = slugify(namaSekolah);
+        // Fungsi untuk menampilkan semua CCTV di lokasi tertentu
+        function toggleAllSchoolCCTV(namaLokasi) {
+                    const schoolSlug = slugify(namaLokasi);
                     // toggleAllSchoolCCTV debug removed
 
                     // Collect card IDs for this school: DOM cards + index entries if any
-                    let cardEls = Array.from(document.querySelectorAll(`.cctv-card[data-sekolah="${schoolSlug}"]`));
+                    let cardEls = Array.from(document.querySelectorAll(`.cctv-card[data-lokasi="${schoolSlug}"]`));
                     const domIds = cardEls.map(c => c.id);
                     const indexList = (window.cctvIndex && window.cctvIndex[schoolSlug]) || [];
                     const indexIds = indexList.map(i => i.cardId).filter(id => !domIds.includes(id));
@@ -341,7 +341,7 @@
                     indexIds.forEach(id => { ensureCardRenderedById(id); });
 
                     // Recollect cards after potential rendering
-                    cardEls = Array.from(document.querySelectorAll(`.cctv-card[data-sekolah="${schoolSlug}"]`));
+                    cardEls = Array.from(document.querySelectorAll(`.cctv-card[data-lokasi="${schoolSlug}"]`));
 
                     // Determine current state by dataset flag or visible style
                     const anyActive = cardEls.some(card => (card.dataset && card.dataset.isActive === '1') || (card.style && card.style.display && card.style.display !== 'none'));
@@ -396,7 +396,7 @@
                 if (sidebarCheckbox) sidebarCheckbox.checked = false;
             }
 
-            updateSchoolEyeIcon(card.dataset.sekolah);
+            updateSchoolEyeIcon(card.dataset.lokasi);
             updateHideAllButtonState();
             updateActiveCCTVCount();
             saveActiveCCTVState();
@@ -444,9 +444,9 @@
                 */
             }
 
-            const sekolahSlug = card.dataset.sekolah;
+            const lokasiSlug = card.dataset.lokasi;
             // Sync per-school eye icon and the top hide-all control.
-            updateSchoolEyeIcon(sekolahSlug);
+            updateSchoolEyeIcon(lokasiSlug);
             // Update both implementations (newer state function + legacy text/icon updater)
             updateHideAllButtonState();
             if (typeof updateHideAllButton === 'function') updateHideAllButton();
@@ -481,7 +481,7 @@
 
         // Fungsi untuk about
         function showAbout() {
-            alert('Tentang Sistem:\n\nDashboard CCTV Sekolah DIY\nVersi 1.0\n\nSistem monitoring keamanan sekolah yang terintegrasi untuk memantau kondisi keamanan di seluruh sekolah di Daerah Istimewa Yogyakarta.\n\nDikembangkan oleh Dinas Pendidikan DIY');
+            alert('Tentang Sistem:\n\nDashboard CCTV Lokasi DIY\nVersi 1.0\n\nSistem monitoring keamanan lokasi yang terintegrasi untuk memantau kondisi keamanan di seluruh lokasi di Daerah Istimewa Yogyakarta.\n\nDikembangkan oleh Dinas Pendidikan DIY');
             closeSidebar();
         }
 
@@ -569,7 +569,7 @@
                 toggle.checked = false;
                 // ensure hide-all icon updates when a card toggle changes
                 toggle.addEventListener('change', function() {
-                    try { updateHideAllButtonState(); updateActiveCCTVCount(); if (this.closest && this.closest('.cctv-card')) updateSchoolEyeIcon(this.closest('.cctv-card').dataset.sekolah); } catch(e) {}
+                    try { updateHideAllButtonState(); updateActiveCCTVCount(); if (this.closest && this.closest('.cctv-card')) updateSchoolEyeIcon(this.closest('.cctv-card').dataset.lokasi); } catch(e) {}
                 });
             });
 
@@ -586,7 +586,7 @@
                             const id = this.dataset && this.dataset.cardId;
                             if (id) {
                                 const card = document.getElementById(id);
-                                if (card && card.dataset && card.dataset.sekolah) updateSchoolEyeIcon(card.dataset.sekolah);
+                                if (card && card.dataset && card.dataset.lokasi) updateSchoolEyeIcon(card.dataset.lokasi);
                             }
                         } catch (e) {}
                     }, 30);

@@ -1,6 +1,6 @@
-// public/js/sekolah.js
+// public/js/lokasi.js
 
-let sekolahData = [];
+let lokasiData = [];
 let filteredData = [];
 let currentPage = 1;
 let itemsPerPage = 10;
@@ -10,20 +10,20 @@ let itemsPerPage = 10;
 
 
 // 1. Ambil data dari API
-function loadSekolahData() {
-    fetch("/api/cctvsekolah", { headers: { Accept: "application/json" } })
+function loadLokasiData() {
+    fetch("/api/cctvlokasi", { headers: { Accept: "application/json" } })
         .then((res) => res.json())
         .then((json) => {
             if (!json.success) {
                 return Swal.fire("Error", json.message, "error");
             }
-            sekolahData = json.data;
-            filteredData = sekolahData;
+            lokasiData = json.data;
+            filteredData = lokasiData;
             currentPage = 1;
             renderTable();
 
             // Perbarui status toggle all berdasarkan data yang ada
-            const allActive = sekolahData.length > 0 && sekolahData.every(item => item.is_active);
+            const allActive = lokasiData.length > 0 && lokasiData.every(item => item.is_active);
             const toggleCheckbox = document.getElementById("toggleAll");
             const label = document.getElementById("toggleAllLabel");
 
@@ -38,15 +38,15 @@ function loadSekolahData() {
         });
 }
 
-function groupSekolahData(data) {
+function groupLokasiData(data) {
     const grouped = {};
 
     data.forEach((item) => {
-        const key = `${item.nama_wilayah}||${item.nama_sekolah}`;
+        const key = `${item.nama_wilayah}||${item.nama_lokasi}`;
         if (!grouped[key]) {
             grouped[key] = {
                 nama_wilayah: item.nama_wilayah,
-                nama_sekolah: item.nama_sekolah,
+                nama_lokasi: item.nama_lokasi,
                 titik: [],
             };
         }
@@ -55,8 +55,8 @@ function groupSekolahData(data) {
 
     Object.values(grouped).forEach((group) => {
         group.titik.sort((a, b) => {
-            const nameA = (a.nama_titik || "").toLowerCase();
-            const nameB = (b.nama_titik || "").toLowerCase();
+            const nameA = (a.nama_cctv || "").toLowerCase();
+            const nameB = (b.nama_cctv || "").toLowerCase();
             return nameA.localeCompare(nameB);
         });
     });
@@ -66,7 +66,7 @@ function groupSekolahData(data) {
     result.sort((a, b) => {
         const wilayahCompare = (a.nama_wilayah || "").toLowerCase().localeCompare((b.nama_wilayah || "").toLowerCase());
         if (wilayahCompare !== 0) return wilayahCompare;
-        return (a.nama_sekolah || "").toLowerCase().localeCompare((b.nama_sekolah || "").toLowerCase());
+        return (a.nama_lokasi || "").toLowerCase().localeCompare((b.nama_lokasi || "").toLowerCase());
     });
 
     return result;
@@ -74,17 +74,17 @@ function groupSekolahData(data) {
 
 // 2. Render tabel berdasarkan filteredData & paging
 function renderTable() {
-    const tbody = document.getElementById("sekolah-tbody");
+    const tbody = document.getElementById("lokasi-tbody");
     tbody.innerHTML = "";
 
-    const groupedData = groupSekolahData(filteredData);
+    const groupedData = groupLokasiData(filteredData);
     let totalTitik = filteredData.length; // Perbaikan: Gunakan filteredData.length
 
     const titikStartIndex = (currentPage - 1) * itemsPerPage;
     const pageData = filteredData.slice(titikStartIndex, titikStartIndex + itemsPerPage);
     
     // Perbaikan: Gunakan data yang sudah di-slice untuk rendering
-    const groupedPageData = groupSekolahData(pageData);
+    const groupedPageData = groupLokasiData(pageData);
 
     let start = totalTitik === 0 ? 0 : titikStartIndex + 1;
     let end = Math.min(titikStartIndex + itemsPerPage, totalTitik);
@@ -98,13 +98,13 @@ function renderTable() {
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 ${index === 0 ? `<td class="text-center align-middle" rowspan="${rowspan}">${group.nama_wilayah}</td>` : ""}
-                ${index === 0 ? `<td class="text-center align-middle" rowspan="${rowspan}">${group.nama_sekolah}</td>` : ""}
-                <td class="text-center align-middle">${item.nama_titik}</td>
+                ${index === 0 ? `<td class="text-center align-middle" rowspan="${rowspan}">${group.nama_lokasi}</td>` : ""}
+                <td class="text-center align-middle">${item.nama_cctv}</td>
                 <td class="text-center align-middle">
                     <div class="d-flex justify-content-center gap-2">
                         <!-- Perbaikan: Mengirimkan ID, bukan objek, untuk keamanan dan menghindari error karakter -->
                         <button class="btn btn-sm btn-secondary" onclick='openEditModal(${item.id})'>Edit</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteSekolah(${item.id})">Delete</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteLokasi(${item.id})">Delete</button>
                         <label class="switch">
                             <input type="checkbox" ${item.is_active ? 'checked' : ''} onchange="toggleActive(${item.id})">
                             <span class="slider round"></span>
@@ -120,7 +120,7 @@ function renderTable() {
 }
 
 function toggleActive(id) {
-    fetch(`/api/cctvsekolah/${id}/toggle`, {
+    fetch(`/api/cctvlokasi/${id}/toggle`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -132,7 +132,7 @@ function toggleActive(id) {
         .then((res) => {
             if (res.success) {
                 Swal.fire("Berhasil", res.message, "success");
-                loadSekolahData();
+                loadLokasiData();
             } else {
                 Swal.fire("Gagal", res.message, "error");
             }
@@ -150,7 +150,7 @@ function toggleAllActive(checkbox) {
 
     const idsToToggle = filteredData.map(item => item.id);
 
-    fetch(`/api/cctvsekolah/bulk-toggle`, {
+    fetch(`/api/cctvlokasi/bulk-toggle`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -163,7 +163,7 @@ function toggleAllActive(checkbox) {
         .then(res => {
             if (res.success) {
                 Swal.fire("Berhasil", res.message, "success");
-                loadSekolahData();
+                loadLokasiData();
             } else {
                 Swal.fire("Gagal", res.message || "Gagal mengubah semua status", "error");
             }
@@ -201,7 +201,7 @@ function prevPage() {
 }
 
 function nextPage() {
-    const totalPages = Math.ceil((filteredData.length || sekolahData.length) / itemsPerPage);
+    const totalPages = Math.ceil((filteredData.length || lokasiData.length) / itemsPerPage);
     if (currentPage < totalPages) {
         currentPage++;
         renderTable();
@@ -211,20 +211,20 @@ function nextPage() {
 
 
 // 5. Search lokal
-function searchcctvsekolah() {
+function searchcctvlokasi() {
     const q = document.getElementById("searchInput").value.trim().toLowerCase();
-    filteredData = sekolahData.filter(
+    filteredData = lokasiData.filter(
         (item) =>
             (item.nama_wilayah && item.nama_wilayah.toLowerCase().includes(q)) ||
-            (item.nama_sekolah && item.nama_sekolah.toLowerCase().includes(q)) ||
-            (item.nama_titik && item.nama_titik.toLowerCase().includes(q))
+            (item.nama_lokasi && item.nama_lokasi.toLowerCase().includes(q)) ||
+            (item.nama_cctv && item.nama_cctv.toLowerCase().includes(q))
     );
     currentPage = 1;
     renderTable();
 }
 
 // Hapus Data
-function deleteSekolah(id) {
+function deleteLokasi(id) {
     Swal.fire({
         title: "Yakin ingin menghapus?",
         text: "Data yang dihapus tidak bisa dikembalikan!",
@@ -236,7 +236,7 @@ function deleteSekolah(id) {
         cancelButtonText: "Batal",
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`/api/cctvsekolah/${id}`, {
+            fetch(`/api/cctvlokasi/${id}`, {
                 method: "DELETE",
                 headers: {
                     Accept: "application/json",
@@ -247,7 +247,7 @@ function deleteSekolah(id) {
                 .then((res) => {
                     if (res.success) {
                         Swal.fire("Dihapus", res.message, "success");
-                        loadSekolahData();
+                        loadLokasiData();
                     } else {
                         Swal.fire("Error", res.message, "error");
                     }
@@ -263,13 +263,13 @@ function deleteSekolah(id) {
 // 7. Open modal edit/ add
 function openAddModal() {
     document.getElementById("cctvForm").reset();
-    document.getElementById("idSekolah").value = "";
-    document.getElementById("cctvForm").setAttribute("action", "/api/cctvsekolah");
+    document.getElementById("idLokasi").value = "";
+    document.getElementById("cctvForm").setAttribute("action", "/api/cctvlokasi");
     document.getElementById("cctvForm").setAttribute("method", "POST");
-    document.getElementById("cctvsekolahModalLabel").textContent = "Tambah CCTV Sekolah";
+    document.getElementById("cctvlokasiModalLabel").textContent = "Tambah CCTV Lokasi";
     document.getElementById("saveBtn").textContent = "Save";
 
-    const modalElement = document.getElementById('cctvsekolahModal');
+    const modalElement = document.getElementById('cctvlokasiModal');
     const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
     modal.show();
 }
@@ -277,37 +277,37 @@ function openAddModal() {
 
 // Perbaikan: Mengambil item dari data yang sudah ada berdasarkan ID
 function openEditModal(id) {
-    const item = sekolahData.find(d => d.id === id);
+    const item = lokasiData.find(d => d.id === id);
     if (!item) {
         Swal.fire("Error", "Data tidak ditemukan.", "error");
         return;
     }
-    document.getElementById("idSekolah").value = item.id;
+    document.getElementById("idLokasi").value = item.id;
     document.getElementById("wilayah_id").value = item.wilayah_id;
-    // Perbaikan: Gunakan ID yang sesuai, misal "nama_sekolah"
-    document.getElementById("nama_sekolah").value = item.nama_sekolah;
-    document.getElementById("nama_titik").value = item.nama_titik;
+    // Perbaikan: Gunakan ID yang sesuai, misal "nama_lokasi"
+    document.getElementById("nama_lokasi").value = item.nama_lokasi;
+    document.getElementById("nama_cctv").value = item.nama_cctv;
     document.getElementById("link_stream").value = item.link; // Perbaikan: Gunakan ID "link_stream"
 
-    document.getElementById("cctvForm").setAttribute("action", `/api/cctvsekolah/${item.id}`);
+    document.getElementById("cctvForm").setAttribute("action", `/api/cctvlokasi/${item.id}`);
     document.getElementById("cctvForm").setAttribute("method", "PUT");
-    document.getElementById("cctvsekolahModalLabel").textContent = "Edit CCTV Sekolah";
+    document.getElementById("cctvlokasiModalLabel").textContent = "Edit CCTV Lokasi";
     document.getElementById("saveBtn").textContent = "Update";
 
-    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("cctvsekolahModal"));
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("cctvlokasiModal"));
     modal.show();
 }
 
 
 // 8. Inisialisasi ketika dokumen siap
 document.addEventListener("DOMContentLoaded", () => {
-    loadSekolahData();
+    loadLokasiData();
 
     const rowsPerPageSelect = document.getElementById("rowsPerPage");
     if (rowsPerPageSelect) {
         rowsPerPageSelect.addEventListener("change", function () {
             if (this.value === "all") {
-                itemsPerPage = filteredData.length || sekolahData.length;
+                itemsPerPage = filteredData.length || lokasiData.length;
                 showAllMode = true;
             } else {
                 itemsPerPage = parseInt(this.value);
@@ -325,15 +325,15 @@ document.addEventListener("DOMContentLoaded", () => {
 document.getElementById("cctvForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const id = document.getElementById("idSekolah").value;
+    const id = document.getElementById("idLokasi").value;
     const method = id ? "PUT" : "POST";
-    const url = id ? `/api/cctvsekolah/${id}` : "/api/cctvsekolah";
+    const url = id ? `/api/cctvlokasi/${id}` : "/api/cctvlokasi";
 
     // Perbaikan: Mengambil nilai dari elemen form dengan ID yang benar
     const data = {
         wilayah_id: document.getElementById("wilayah_id").value,
-        nama_sekolah: document.getElementById("nama_sekolah").value,
-        nama_titik: document.getElementById("nama_titik").value,
+        nama_lokasi: document.getElementById("nama_lokasi").value,
+        nama_cctv: document.getElementById("nama_cctv").value,
         link_stream: document.getElementById("link_stream").value,
     };
 
@@ -357,10 +357,10 @@ document.getElementById("cctvForm").addEventListener("submit", function (e) {
                     // reset form
                     const form = document.getElementById("cctvForm");
                     form.reset();
-                    document.getElementById("idSekolah").value = "";
+                    document.getElementById("idLokasi").value = "";
 
                     // ambil instance modal
-                    const modalElement = document.getElementById("cctvsekolahModal");
+                    const modalElement = document.getElementById("cctvlokasiModal");
                     let modalInstance = bootstrap.Modal.getInstance(modalElement);
                     // Jika instance tidak ditemukan, buat baru
                     if (!modalInstance) {
@@ -375,7 +375,7 @@ document.getElementById("cctvForm").addEventListener("submit", function (e) {
                     document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
 
                     // reload data
-                    loadSekolahData();
+                    loadLokasiData();
                 });
             } else {
                 let errorText = "";

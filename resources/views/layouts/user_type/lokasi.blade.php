@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('sekolah')
+@section('lokasi')
 
 
     @if(\Request::is('static-sign-up'))

@@ -4,22 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cctv;
-use App\Models\Sekolah;
+use App\Models\Lokasi;
 use App\Models\Wilayah;
 use App\Models\Panorama;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\SekolahExport;
-use Illuminate\Support\Str; // ADD: slug helper
+use App\Exports\LokasiExport;
+use Illuminate\Support\Str;
 
-class SekolahController extends Controller
+class LokasiController extends Controller
 {
     public function dashboard()
     {
-        // Hitung total jumlah CCTV dari tabel cctvs yang terhubung dengan sekolah
-        // Ini akan memberikan total semua CCTV sekolah, bukan hanya jumlah sekolah.
-        $sekolahCount = Cctv::whereNotNull('sekolah_id')->count();
+        // Hitung total jumlah CCTV dari tabel cctvs yang terhubung dengan lokasi
+        // Ini akan memberikan total semua CCTV lokasi, bukan hanya jumlah lokasi.
+        $lokasiCount = Cctv::whereNotNull('lokasi_id')->count();
 
         // Hitung total jumlah panorama
         $panoramaCount = Panorama::count();
@@ -27,9 +27,9 @@ class SekolahController extends Controller
         // Hitung total jumlah user
         $userCount = User::count();
 
-        // Statistik jumlah sekolah per wilayah
-        $jumlahSekolahPerWilayah = Sekolah::select('wilayah.nama_wilayah as namaWilayah', DB::raw('COUNT(sekolah.id) as total_sekolah'))
-            ->join('wilayah', 'sekolah.wilayah_id', '=', 'wilayah.id')
+        // Statistik jumlah lokasi per wilayah
+        $jumlahLokasiPerWilayah = Lokasi::select('wilayah.nama_wilayah as namaWilayah', DB::raw('COUNT(lokasi.id) as total_lokasi'))
+            ->join('wilayah', 'lokasi.wilayah_id', '=', 'wilayah.id')
             ->groupBy('wilayah.nama_wilayah')
             ->get();
 
@@ -40,40 +40,40 @@ class SekolahController extends Controller
             ->groupBy('wilayah.nama_wilayah')
             ->get();
 
-        // Statistik jumlah CCTV per sekolah
-        $jumlahCCTVPerSekolah = Cctv::select('sekolah.nama_sekolah as namaSekolah', DB::raw('COUNT(cctvs.link_stream) as total_cctv'))
-            ->join('sekolah', 'cctvs.sekolah_id', '=', 'sekolah.id')
+        // Statistik jumlah CCTV per lokasi
+        $jumlahCCTVPerLokasi = Cctv::select('lokasi.nama_lokasi as namaLokasi', DB::raw('COUNT(cctvs.link_stream) as total_cctv'))
+            ->join('lokasi', 'cctvs.lokasi_id', '=', 'lokasi.id')
             ->whereNotNull('cctvs.link_stream')
-            ->groupBy('sekolah.nama_sekolah')
+            ->groupBy('lokasi.nama_lokasi')
             ->get();
 
         return view('admin.dashboard', compact(
-            'sekolahCount', 'panoramaCount', 'userCount',
-            'jumlahSekolahPerWilayah', 'jumlahCCTVPerWilayah', 'jumlahCCTVPerSekolah'
+            'lokasiCount', 'panoramaCount', 'userCount',
+            'jumlahLokasiPerWilayah', 'jumlahCCTVPerWilayah', 'jumlahCCTVPerLokasi'
         ));
     }
 
-    public function cctvsekolah()
+    public function cctvlokasi()
     {
         // Ambil CCTV aktif saja + eager load relasi, dan hanya kolom yang dibutuhkan
-        $cctvs = Cctv::with(['sekolah', 'wilayah'])
+        $cctvs = Cctv::with(['lokasi', 'wilayah'])
             ->where('active', true)
-            ->select('id', 'sekolah_id', 'wilayah_id', 'nama_titik', 'link_stream', 'active')
-            ->orderBy('wilayah_id')->orderBy('sekolah_id')->orderBy('nama_titik')->get();
+            ->select('id', 'lokasi_id', 'wilayah_id', 'nama_cctv', 'link_stream', 'active')
+            ->orderBy('wilayah_id')->orderBy('lokasi_id')->orderBy('nama_cctv')->get();
 
         $groupedCctvs = $cctvs
-            ->sortBy(fn($c) => [$c->wilayah->nama_wilayah, $c->sekolah->nama_sekolah, $c->nama_titik])
+            ->sortBy(fn($c) => [$c->wilayah->nama_wilayah, $c->lokasi->nama_lokasi, $c->nama_cctv])
             ->groupBy(fn($c) => $c->wilayah->nama_wilayah)
             ->sortKeys() // urutkan wilayah
             ->map(function ($wg) {
-                return $wg->groupBy(fn($c) => $c->sekolah->nama_sekolah)
-                        ->sortKeys() // urutkan sekolah
-                        ->map(fn($sg) => $sg->sortBy('nama_titik')); // urutkan titik CCTV
+                return $wg->groupBy(fn($c) => $c->lokasi->nama_lokasi)
+                        ->sortKeys() // urutkan lokasi
+                        ->map(fn($sg) => $sg->sortBy('nama_cctv')); // urutkan titik CCTV
             });
 
         // Statistik ringkas dan efisien
         $jumlahCCTV = Cctv::count();
-        $jumlahSekolah = Sekolah::count();
+        $jumlahLokasi = Lokasi::count();
         $jumlahWilayah = Wilayah::count();
         $jumlahCCTVaktif = Cctv::where('active', true)->count();
 
@@ -90,19 +90,19 @@ class SekolahController extends Controller
         $cctvIndex = $cctvs->map(function ($c) {
             return [
                 'wilayah'     => $c->wilayah->nama_wilayah,
-                'sekolah'     => $c->sekolah->nama_sekolah,
-                'sekolahSlug' => Str::slug($c->sekolah->nama_sekolah),
-                'titik'       => $c->nama_titik,
+                'lokasi'     => $c->lokasi->nama_lokasi,
+                'lokasiSlug' => Str::slug($c->lokasi->nama_lokasi),
+                'titik'       => $c->nama_cctv,
                 'link'        => $c->link_stream,
                 'active'      => (bool) $c->active,
-                'cardId'      => Str::slug($c->sekolah->nama_sekolah . '-' . $c->nama_titik),
+                'cardId'      => Str::slug($c->lokasi->nama_lokasi . '-' . $c->nama_cctv),
             ];
-        })->groupBy('sekolahSlug'); // sekolahSlug => [items...]
+        })->groupBy('lokasiSlug'); // lokasiSlug => [items...]
 
-        return view('sekolah.sekolah', compact(
+        return view('lokasi.index', compact(
             'groupedCctvs',
             'jumlahCCTV',
-            'jumlahSekolah',
+            'jumlahLokasi',
             'jumlahWilayah',
             'jumlahCCTVaktif',
             'namaWilayahLengkap',
@@ -128,60 +128,60 @@ class SekolahController extends Controller
 
     public function index()
     {
-        $cctvs = Cctv::with(['sekolah', 'wilayah'])->paginate(10);
-        return view('sekolah.menu-sekolah', compact('cctvs'));
+        $cctvs = Cctv::with(['lokasi', 'wilayah'])->paginate(10);
+        return view('lokasi.menu-lokasi', compact('cctvs'));
     }
 
     public function create()
     {
-        $sekolahs = Sekolah::all();
+        $lokasis = Lokasi::all();
         $wilayahs = Wilayah::all();
-        return view('sekolah.create', compact('sekolahs', 'wilayahs'));
+        return view('lokasi.create', compact('lokasis', 'wilayahs'));
     }
 
     public function store(Request $request)
     {
         $cctv = new Cctv;
-        $cctv->sekolah_id = $request->sekolah_id;
+        $cctv->lokasi_id = $request->lokasi_id;
         $cctv->wilayah_id = $request->wilayah_id;
-        $cctv->nama_titik = $request->namaTitik;
+        $cctv->nama_cctv = $request->namaTitik;
         $cctv->link_stream = $request->link;
         $cctv->active = true;
         $cctv->save();
-        return redirect()->route('sekolah.index');
+        return redirect()->route('lokasi.index');
     }
 
     public function edit($id)
     {
-        $cctv = Cctv::with(['sekolah', 'wilayah'])->findOrFail($id);
-        $sekolahs = Sekolah::all();
+        $cctv = Cctv::with(['lokasi', 'wilayah'])->findOrFail($id);
+        $lokasis = Lokasi::all();
         $wilayahs = Wilayah::all();
-        return view('sekolah.edit', compact('cctv', 'sekolahs', 'wilayahs'));
+        return view('lokasi.edit', compact('cctv', 'lokasis', 'wilayahs'));
     }
 
     public function update(Request $request, $id)
     {
         $cctv = Cctv::findOrFail($id);
-        $cctv->sekolah_id = $request->sekolah_id;
+        $cctv->lokasi_id = $request->lokasi_id;
         $cctv->wilayah_id = $request->wilayah_id;
-        $cctv->nama_titik = $request->namaTitik;
+        $cctv->nama_cctv = $request->namaTitik;
         $cctv->link_stream = $request->link;
         $cctv->save();
-        return redirect()->route('sekolah.index');
+        return redirect()->route('lokasi.index');
     }
 
     public function delete($id)
     {
         $cctv = Cctv::findOrFail($id);
         $cctv->delete();
-        return redirect()->route('sekolah.index');
+        return redirect()->route('lokasi.index');
     }
 
     public function checkDuplicate(Request $request)
     {
         $field = $request->get('field');
         $value = $request->get('value');
-        $exists = Cctv::where($field === 'namaTitik' ? 'nama_titik' : 'link_stream', $value)->exists();
+        $exists = Cctv::where($field === 'namaTitik' ? 'nama_cctv' : 'link_stream', $value)->exists();
         return response()->json(['exists' => $exists]);
     }
 
@@ -193,46 +193,46 @@ class SekolahController extends Controller
 
     public function export()
     {
-        return Excel::download(new SekolahExport, 'data-cctv-sekolah.xlsx');
+        return Excel::download(new LokasiExport, 'data-cctv-lokasi.xlsx');
     }
 
     public function showRekapanCCTV()
     {
         $data = DB::table('cctvs')
-            ->join('sekolah', 'cctvs.sekolah_id', '=', 'sekolah.id')
+            ->join('lokasi', 'cctvs.lokasi_id', '=', 'lokasi.id')
             ->join('wilayah', 'cctvs.wilayah_id', '=', 'wilayah.id')
             ->select(
-                'sekolah.id as sekolahId',
-                'sekolah.nama_sekolah as namaSekolah',
+                'lokasi.id as lokasiId',
+                'lokasi.nama_lokasi as namaLokasi',
                 'wilayah.nama_wilayah as namaWilayah',
                 DB::raw('COUNT(cctvs.id) as total_cctv')
             )
-            ->groupBy('sekolah.id', 'sekolah.nama_sekolah', 'wilayah.nama_wilayah')
-            ->orderBy('sekolah.nama_sekolah', 'asc')
+            ->groupBy('lokasi.id', 'lokasi.nama_lokasi', 'wilayah.nama_wilayah')
+            ->orderBy('lokasi.nama_lokasi', 'asc')
             ->get();
 
-        // Ambil detail titik CCTV per sekolah
+        // Ambil detail titik CCTV per lokasi
         $detailCCTV = DB::table('cctvs')
-            ->join('sekolah', 'cctvs.sekolah_id', '=', 'sekolah.id')
+            ->join('lokasi', 'cctvs.lokasi_id', '=', 'lokasi.id')
             ->select(
-                'sekolah.id as sekolahId',
-                'cctvs.nama_titik as namaTitik',
+                'lokasi.id as lokasiId',
+                'cctvs.nama_cctv as namaTitik',
                 'cctvs.link_stream as linkStream'
             )
-            ->orderBy('cctvs.nama_titik', 'asc')
+            ->orderBy('cctvs.nama_cctv', 'asc')
             ->get()
-            ->groupBy('sekolahId');
+            ->groupBy('lokasiId');
 
-        return view('rekapan.cctv_sekolah', [
-            'jumlahCCTVPerSekolah' => $data,
+        return view('rekapan.cctv_lokasi', [
+            'jumlahCCTVPerLokasi' => $data,
             'detailCCTV' => $detailCCTV
         ]);
     }
 
-    public function daftarSekolah()
+    public function daftarLokasi()
     {
-        $sekolah = Sekolah::with('wilayah')->get();
-        return view('rekapan.detailsekolah', compact('sekolah'));
+        $lokasi = Lokasi::with('wilayah')->get();
+        return view('rekapan.detaillokasi', compact('lokasi'));
     }
 
 

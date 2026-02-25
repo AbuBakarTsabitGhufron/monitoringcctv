@@ -9,7 +9,7 @@ class cctvController extends Controller
 {
     public function __construct()
     {
-        // Share data to all views so sekolah.blade.php can use them directly.
+        // Share data to all views so lokasi.blade.php can use them directly.
         view()->share('activeCctvCount', $this->getActiveCctvCount());
         view()->share('sidebarCctvVisible', session('sidebar_cctv_visible', true));
     }

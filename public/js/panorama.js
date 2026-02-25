@@ -1,4 +1,4 @@
-// public/js/sekolah.js
+// public/js/lokasi.js
 let panoramaData = [];
 let filteredData = [];
 let currentPage = 1;
@@ -115,7 +115,7 @@ function renderTable() {
                 <button class="btn btn-sm btn-secondary" onclick='openEditModal(${JSON.stringify(
                     item
                 )})'>Edit</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteSekolah(${
+                <button class="btn btn-sm btn-danger" onclick="deleteLokasi(${
                     item.id
                 })">Delete</button>
             </td>
@@ -182,7 +182,7 @@ function searchCctvPanorama() {
     renderTable();
 }
 // Hapus Data
-function deleteSekolah(id) {
+function deleteLokasi(id) {
     Swal.fire({
         title: "Yakin ingin menghapus?",
         text: "Data yang dihapus tidak bisa dikembalikan!",
@@ -228,7 +228,7 @@ function openAddModal() {
     new bootstrap.Modal($("#panoramaModal")).show();
 }
 function openEditModal(item) {
-    $("#idSekolah").val(item.id);
+    $("#idLokasi").val(item.id);
     $("#namaWilayah").val(item.namaWilayah);
     $("#namaTitik").val(item.namaTitik);
     $("#link").val(item.link);
@@ -249,7 +249,7 @@ document
     .addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const id = document.getElementById("idSekolah").value;
+        const id = document.getElementById("idLokasi").value;
         const method = id ? "PUT" : "POST";
         const url = id ? `/api/cctvpanorama/${id}` : "/api/cctvpanorama";
 
@@ -273,7 +273,7 @@ document
                 if (res.success) {
                     Swal.fire("Berhasil", res.message, "success");
                     document.getElementById("panoramaForm").reset();
-                    document.getElementById("idSekolah").value = "";
+                    document.getElementById("idLokasi").value = "";
 
                     const modalElement =
                         document.getElementById("panoramaModal");

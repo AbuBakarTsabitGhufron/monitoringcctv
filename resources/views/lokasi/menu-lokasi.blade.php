@@ -17,23 +17,23 @@
                         <div class="card-header pb-0">
                             <div class="row align-items-center">
                                 <div class="col-md-4">
-                                    <h6 class="mb-2">CCTV Sekolah</h6>
+                                    <h6 class="mb-2">CCTV Lokasi</h6>
                                     <input type="text" id="searchInput"
                                         class="form-control form-control-sm mt-1"
                                         placeholder="Search..."
-                                        onkeyup="searchcctvsekolah()" />
+                                        onkeyup="searchcctvlokasi()" />
                                 </div>
                                 <div class="col-md-8 d-flex flex-wrap justify-content-end align-items-center gap-2 mt-3 mt-md-0">
-                                    <a href="{{ route('sekolah.template.download') }}" class="btn btn-outline-secondary btn-sm">
+                                    <a href="{{ route('lokasi.template.download') }}" class="btn btn-outline-secondary btn-sm">
                                         Template
                                     </a>
-                                    <form action="{{ route('sekolah.import.manual') }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('lokasi.import.manual') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <input type="file" name="file" accept=".xlsx,.xls" onchange="this.form.submit()" style="display: none;" id="uploadExcelInput">
                                         <button type="button" class="btn btn-success btn-sm" onclick="document.getElementById('uploadExcelInput').click()">Import Excel</button>
                                     </form>
                                     <a href="javascript:;" class="btn btn-primary btn-sm"
-                                        data-bs-toggle="modal" data-bs-target="#cctvsekolahModal"
+                                        data-bs-toggle="modal" data-bs-target="#cctvlokasiModal"
                                         onclick="openAddModal()">Add</a>
                                     <div class="d-flex align-items-center ms-2">
                                         <label class="switch">
@@ -49,7 +49,7 @@
                         <div class="card-body px-0 pt-0 pb-2">
                             <div class="table-responsive-sm">
                                 {{-- Tables --}}
-                                @include('sekolah.partials.table')
+                                @include('lokasi.partials.table')
                             </div>
                             <div class="d-flex justify-content-between mt-3">
                                 <button class="btn btn-primary btn-sm ms-3 py-2 px-3" onclick="prevPage()">Prev</button>
@@ -73,7 +73,7 @@
             </div>
 
             <!-- Memanggil modal Add dan Edit dari partials -->
-            @include('sekolah.partials.modals')
+            @include('lokasi.partials.modals')
 
         </div>
     </main>
@@ -92,7 +92,7 @@
         const token = Cookies.get('token') || ''; // kalau pakai auth header
     </script>
     <!-- Custom Script -->
-    <script src="{{ asset('js/sekolah.js') }}"></script>
+    <script src="{{ asset('js/lokasi.js') }}"></script>
     @if(session('swal'))
     <script>
         Swal.fire({

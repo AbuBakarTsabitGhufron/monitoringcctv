@@ -15,7 +15,7 @@ class TemplateController extends Controller
 
         // Header kolom
         $sheet->setCellValue('A1', 'namaWilayah');
-        $sheet->setCellValue('B1', 'namaSekolah');  
+        $sheet->setCellValue('B1', 'namaLokasi');  
         $sheet->setCellValue('C1', 'namaTitik');
         $sheet->setCellValue('D1', 'link');
 
@@ -27,7 +27,7 @@ class TemplateController extends Controller
 
         // Buat file Excel ke memory
         $writer = new Xlsx($spreadsheet);
-        $filename = 'template_import_sekolah.xlsx';
+        $filename = 'template_import_lokasi.xlsx';
 
         // Simpan ke memory
         $tempFile = tempnam(sys_get_temp_dir(), $filename);

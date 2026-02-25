@@ -169,11 +169,11 @@
 
             <div class="card-row">
                 <div class="card" style="background-color:#7978e9; cursor: pointer;">
-                    <a href="{{ route('rekapan.cctv.sekolah') }}" style="text-decoration: none;">
+                    <a href="{{ route('rekapan.cctv.lokasi') }}" style="text-decoration: none;">
                         <div class="card-content">
                             <div class="left-column">
-                                <h5 style="color: white; font-size: 13pt;">CCTV Sekolah</h5>
-                                <p style="color: white; font-size: 24pt;" class="fs-30 mb-2">{{ $sekolahCount }}</p>
+                                <h5 style="color: white; font-size: 13pt;">CCTV Lokasi</h5>
+                                <p style="color: white; font-size: 24pt;" class="fs-30 mb-2">{{ $lokasiCount }}</p>
                             </div>
                             <div class="right-column">
                                 <i class="fas fa-book-open icon-card"></i>
@@ -183,12 +183,12 @@
                 </div>
 
                 <div class="card" style="background-color: #f3797e; cursor: pointer;">
-                    <a href="{{ route('rekapan.detailsekolah') }}" style="text-decoration: none;">
+                    <a href="{{ route('rekapan.detaillokasi') }}" style="text-decoration: none;">
                         <div class="card-content">
                             <div class="left-column">
-                                <h3 style="color: white;">Sekolah</h3>
+                                <h3 style="color: white;">Lokasi</h3>
                                 <p style="color: white; font-size: 24pt;" class="fs-30 mb-2">
-                                    {{ $jumlahCCTVPerSekolah->count() }}
+                                    {{ $jumlahCCTVPerLokasi->count() }}
                                 </p>
                             </div>
                             <div class="right-column">
@@ -207,29 +207,29 @@
     <div class="statistik-section" style="margin-top: -70px; margin-bottom: 40px;">
         <h4>Statistik CCTV</h4>
         <div style="margin-top: 20px;">
-            <h5>Grafik Jumlah Sekolah dan CCTV per Wilayah</h5>
+            <h5>Grafik Jumlah Lokasi dan CCTV per Wilayah</h5>
             <canvas id="wilayahChart" style="max-width: 100%; height: 400px;"></canvas>
         </div>
         <div style="margin-top: 40px;">
-            <h5>Grafik Jumlah CCTV per Sekolah</h5>
-            <canvas id="sekolahChart" style="max-width: 100%; height: 300px;"></canvas>
+            <h5>Grafik Jumlah CCTV per Lokasi</h5>
+            <canvas id="lokasiChart" style="max-width: 100%; height: 300px;"></canvas>
         </div>
     </div>
 </div>
 
 <script>
-    const sekolahPerWilayah = @json($jumlahSekolahPerWilayah);
+    const lokasiPerWilayah = @json($jumlahLokasiPerWilayah);
     const cctvPerWilayah = @json($jumlahCCTVPerWilayah);
-    const cctvPerSekolah = @json($jumlahCCTVPerSekolah);
+    const cctvPerLokasi = @json($jumlahCCTVPerLokasi);
 
     const wilayahLabels = [...new Set([
-        ...sekolahPerWilayah.map(d => d.namaWilayah),
+        ...lokasiPerWilayah.map(d => d.namaWilayah),
         ...cctvPerWilayah.map(d => d.namaWilayah)
     ])];
 
-    const sekolahData = wilayahLabels.map(w => {
-        const match = sekolahPerWilayah.find(d => d.namaWilayah === w);
-        return match ? match.total_sekolah : 0;
+    const lokasiData = wilayahLabels.map(w => {
+        const match = lokasiPerWilayah.find(d => d.namaWilayah === w);
+        return match ? match.total_lokasi : 0;
     });
 
     const cctvWilayahData = wilayahLabels.map(w => {
@@ -242,8 +242,8 @@
         data: {
             labels: wilayahLabels,
             datasets: [{
-                label: 'Jumlah Sekolah',
-                data: sekolahData,
+                label: 'Jumlah Lokasi',
+                data: lokasiData,
                 backgroundColor: 'rgba(54, 162, 235, 0.7)'
             }, {
                 label: 'Jumlah CCTV',
@@ -257,41 +257,41 @@
                 legend: { position: 'top' },
                 title: {
                     display: true,
-                    text: 'Statistik Sekolah & CCTV per Wilayah'
+                    text: 'Statistik Lokasi & CCTV per Wilayah'
                 }
             }
         }
     });
 
-    const sekolahByWilayah = {};
-    cctvPerSekolah.forEach(item => {
-        if (!sekolahByWilayah[item.namaWilayah]) {
-            sekolahByWilayah[item.namaWilayah] = [];
+    const lokasiByWilayah = {};
+    cctvPerLokasi.forEach(item => {
+        if (!lokasiByWilayah[item.namaWilayah]) {
+            lokasiByWilayah[item.namaWilayah] = [];
         }
-        sekolahByWilayah[item.namaWilayah].push(item);
+        lokasiByWilayah[item.namaWilayah].push(item);
     });
 
-    const sekolahLabels = [];
-    const cctvSekolahData = [];
+    const lokasiLabels = [];
+    const cctvLokasiData = [];
     const backgroundColors = [];
 
-    Object.entries(sekolahByWilayah).forEach(([wilayah, sekolahList], wilayahIndex) => {
-        sekolahList.forEach((item, sekolahIndex) => {
-            sekolahLabels.push(item.namaSekolah);
-            cctvSekolahData.push(item.total_cctv);
+    Object.entries(lokasiByWilayah).forEach(([wilayah, lokasiList], wilayahIndex) => {
+        lokasiList.forEach((item, lokasiIndex) => {
+            lokasiLabels.push(item.namaLokasi);
+            cctvLokasiData.push(item.total_cctv);
             const hue = (wilayahIndex * 60) % 360;
-            const lightness = 50 + (sekolahIndex * 10) % 30;
+            const lightness = 50 + (lokasiIndex * 10) % 30;
             backgroundColors.push(`hsl(${hue}, 70%, ${lightness}%)`);
         });
     });
 
-    new Chart(document.getElementById('sekolahChart'), {
+    new Chart(document.getElementById('lokasiChart'), {
         type: 'pie',
         data: {
-            labels: sekolahLabels,
+            labels: lokasiLabels,
             datasets: [{
                 label: 'Jumlah CCTV',
-                data: cctvSekolahData,
+                data: cctvLokasiData,
                 backgroundColor: backgroundColors
             }]
         },
@@ -301,7 +301,7 @@
                 legend: { position: 'right' },
                 title: {
                     display: true,
-                    text: 'Jumlah CCTV per Sekolah'
+                    text: 'Jumlah CCTV per Lokasi'
                 },
                 tooltip: {
                     callbacks: {

@@ -1,11 +1,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="{{ asset('css/sekolah.css') }}" rel="stylesheet">
+<link href="{{ asset('css/lokasi.css') }}" rel="stylesheet">
 
 @php
     // Hapus semua query Eloquent di sini. Data disuplai dari controller:
-    // $groupedCctvs, $jumlahCCTV, $jumlahSekolah, $jumlahWilayah, $jumlahCCTVaktif, $namaWilayahLengkap
+    // $groupedCctvs, $jumlahCCTV, $jumlahLokasi, $jumlahWilayah, $jumlahCCTVaktif, $namaWilayahLengkap
 @endphp
 <style>
     .sidebar-content {
@@ -38,10 +38,10 @@
             <div class="navbar-brand">
                 <div>
                     <i class="fas fa-video text-primary me-2"></i>
-                    CCTV SEKOLAH
+                    CCTV LOKASI
                 </div>
                 <div style="font-size: 0.7rem; color: #6c757d; font-weight: normal;">
-                    Memantau Kondisi Keamanan Sekolah DIY
+                    Memantau Kondisi Keamanan Lokasi DIY
                 </div>
             </div>
             <div class="ms-auto navbar-status">
@@ -101,40 +101,40 @@
                                 <i class="fas fa-chevron-right" id="cctvChevron"></i>
                             </div>
                             <div class="dropdown-content" id="cctvDropdown">
-                                @foreach ($groupedCctvs as $wilayah => $sekolahGroup)
+                                @foreach ($groupedCctvs as $wilayah => $lokasiGroup)
                                     <div class="dropdown-item" onclick="toggleSubDropdown('{{ Str::slug($wilayah) }}Dropdown')">
                                         <i class="fas fa-map-marker-alt me-2"></i>{{ $namaWilayahLengkap[$wilayah] ?? $wilayah }}
                                         <i class="fas fa-chevron-right float-end" id="{{ Str::slug($wilayah) }}Chevron"></i>
                                     </div>
 
                                     <div class="dropdown-content sub-dropdown ps-3" id="{{ Str::slug($wilayah) }}Dropdown">
-                                        @foreach ($sekolahGroup as $namaSekolah => $cctvs)
-                                            @php $sekolahSlug = Str::slug($namaSekolah); @endphp
+                                        @foreach ($lokasiGroup as $namaLokasi => $cctvs)
+                                            @php $lokasiSlug = Str::slug($namaLokasi); @endphp
                                             <div class="dropdown-item d-flex justify-content-between align-items-center"
-                                                onclick="toggleSchool('{{ $sekolahSlug }}')">
-                                                <span><i class="fas fa-school me-2"></i>{{ $namaSekolah }}</span>
+                                                onclick="toggleSchool('{{ $lokasiSlug }}')">
+                                                <span><i class="fas fa-school me-2"></i>{{ $namaLokasi }}</span>
                                                 <div>
-                                                    <i id="eye-{{ $sekolahSlug }}" class="fas fa-eye-slash me-2"
-                                                        onclick="event.stopPropagation(); toggleAllSchoolCCTV('{{ $namaSekolah }}')"
-                                                        title="Tampilkan/sembunyikan CCTV {{ $namaSekolah }}"
+                                                    <i id="eye-{{ $lokasiSlug }}" class="fas fa-eye-slash me-2"
+                                                        onclick="event.stopPropagation(); toggleAllSchoolCCTV('{{ $namaLokasi }}')"
+                                                        title="Tampilkan/sembunyikan CCTV {{ $namaLokasi }}"
                                                         style="cursor: pointer; opacity: 0.7;"></i>
-                                                    <i class="fas fa-chevron-right" id="{{ $sekolahSlug }}Chevron"></i>
+                                                    <i class="fas fa-chevron-right" id="{{ $lokasiSlug }}Chevron"></i>
                                                 </div>
                                             </div>
-                                            <div class="dropdown-content sub-dropdown ps-4" id="{{ $sekolahSlug }}">
+                                            <div class="dropdown-content sub-dropdown ps-4" id="{{ $lokasiSlug }}">
                                                 @foreach ($cctvs as $cctv)
                                                     <div class="dropdown-item d-flex justify-content-between align-items-center" style="padding: 8px 12px;">
                                                         <div class="d-flex align-items-center flex-grow-1"
-                                                            onclick="selectCCTV('{{ $cctv->sekolah->nama_sekolah }}', '{{ $cctv->nama_titik }}')"
+                                                            onclick="selectCCTV('{{ $cctv->lokasi->nama_lokasi }}', '{{ $cctv->nama_cctv }}')"
                                                             style="cursor: pointer;">
                                                             <i class="fas fa-camera me-2"></i>
-                                                            <span>{{ $cctv->nama_titik }}</span>
+                                                            <span>{{ $cctv->nama_cctv }}</span>
                                                         </div>
                                                         <div class="form-check form-switch me-0" style="min-width: 40px;">
                                                             <input class="form-check-input cctv-point-checkbox"
                                                                 type="checkbox"
-                                                                id="checkbox-{{ Str::slug($cctv->sekolah->nama_sekolah . '-' . $cctv->nama_titik) }}"
-                                                                data-card-id="{{ Str::slug($cctv->sekolah->nama_sekolah . '-' . $cctv->nama_titik) }}"
+                                                                id="checkbox-{{ Str::slug($cctv->lokasi->nama_lokasi . '-' . $cctv->nama_cctv) }}"
+                                                                data-card-id="{{ Str::slug($cctv->lokasi->nama_lokasi . '-' . $cctv->nama_cctv) }}"
                                                                 onchange="toggleCCTVFromSidebar(this)"
                                                                 style="margin: 0; cursor: pointer;"
                                                                 onclick="event.stopPropagation();"
@@ -222,11 +222,11 @@
                         <div class="card-body text-white">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h3 class="mb-0" style="font-size: 24pt;" id="schoolCount">{{ $jumlahSekolah }}</h3>
-                                    <p class="mb-0 small">Total Sekolah</p>
+                                    <h3 class="mb-0" style="font-size: 24pt;" id="schoolCount">{{ $jumlahLokasi }}</h3>
+                                    <p class="mb-0 small">Total Lokasi</p>
                                 </div>
                                 <div class="text-white-50">
-                                    <i class="fas fa-school fa-2x"></i>
+                                    <i class="fas fa-map-marker-alt fa-2x"></i>
                                 </div>
                             </div>
                         </div>
@@ -312,11 +312,11 @@
             return words.length > 3 ? words.map(w => (w[0]||'').toUpperCase()).join('') : (name || '');
         }
 
-        window.toggleAllSchoolCCTV = function(namaSekolah) {
-            const sekolahSlug = slugify(namaSekolah);
-            const cbs = (document.getElementById(sekolahSlug) || document).querySelectorAll('.cctv-point-checkbox');
+        window.toggleAllSchoolCCTV = function(namaLokasi) {
+            const lokasiSlug = slugify(namaLokasi);
+            const cbs = (document.getElementById(lokasiSlug) || document).querySelectorAll('.cctv-point-checkbox');
 
-            const anyVisible = Array.from(document.querySelectorAll(`#cctvGrid .cctv-card[data-sekolah="${sekolahSlug}"]`))
+            const anyVisible = Array.from(document.querySelectorAll(`#cctvGrid .cctv-card[data-lokasi="${lokasiSlug}"]`))
                 .some(card => card.style.display !== 'none');
             const targetShow = !anyVisible;
 
@@ -340,14 +340,14 @@
                 }
             });
 
-            updateSchoolEyeIcon(sekolahSlug);
+            updateSchoolEyeIcon(lokasiSlug);
             updateHideAllButtonState();
             updateActiveCCTVCount();
         };
 
-        window.selectCCTV = function(namaSekolah, namaTitik) {
-            const sekolahSlug = slugify(namaSekolah);
-            const list = window.cctvIndex[sekolahSlug] || [];
+        window.selectCCTV = function(namaLokasi, namaTitik) {
+            const lokasiSlug = slugify(namaLokasi);
+            const list = window.cctvIndex[lokasiSlug] || [];
             const found = list.find(x => (x.titik || '').toLowerCase() === (namaTitik || '').toLowerCase());
             if (!found) return;
 
@@ -366,7 +366,7 @@
                 const cb = document.getElementById('checkbox-' + found.cardId);
                 if (cb) cb.checked = true;
             }
-            updateSchoolEyeIcon(sekolahSlug);
+            updateSchoolEyeIcon(lokasiSlug);
             updateHideAllButtonState();
             updateActiveCCTVCount();
         };
@@ -377,7 +377,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Sinkron awal ikon mata per-sekolah
+            // Sinkron awal ikon mata per-lokasi
             document.querySelectorAll('[id^="eye-"]').forEach(icon => {
                 const slug = icon.id.replace('eye-', '');
                 updateSchoolEyeIcon(slug);

@@ -9,21 +9,21 @@ class Cctv extends Model
 {
     use HasFactory;
 
-    protected $table = 'cctvs'; // Pastikan nama tabel benar
+    protected $table = 'cctvs';
 
     // Tambahkan properti $fillable di sini
     protected $fillable = [
         'wilayah_id',
-        'sekolah_id',
-        'nama_titik',
+        'lokasi_id',
+        'nama_cctv',
         'link_stream',
         'active',
     ];
 
-    // Relasi ke tabel sekolah
-    public function sekolah()
+    // Relasi ke tabel lokasi
+    public function lokasi()
     {
-        return $this->belongsTo(Sekolah::class, 'sekolah_id');
+        return $this->belongsTo(Lokasi::class, 'lokasi_id');
     }
 
     // Relasi ke tabel wilayah

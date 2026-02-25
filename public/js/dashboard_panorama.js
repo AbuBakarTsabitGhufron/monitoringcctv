@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-    // 2. Restore dropdown sekolah
+    // 2. Restore dropdown lokasi
     const selectedSchool = localStorage.getItem("selectedSchool");
     if (selectedSchool) {
         document.getElementById("school-dropdown").value = selectedSchool;

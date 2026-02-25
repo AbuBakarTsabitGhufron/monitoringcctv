@@ -1,15 +1,15 @@
 <!-- Modal Add/Edit -->
-<div class="modal fade" id="cctvsekolahModal" tabindex="-1" aria-labelledby="cctvsekolahModalLabel" aria-hidden="true">
+<div class="modal fade" id="cctvlokasiModal" tabindex="-1" aria-labelledby="cctvlokasiModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="cctvsekolahModalLabel">Tambah CCTV Sekolah</h5>
+                <h5 class="modal-title" id="cctvlokasiModalLabel">Tambah CCTV Lokasi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="cctvForm" method="POST">
                     @csrf
-                    <input type="hidden" id="idSekolah">
+                    <input type="hidden" id="idLokasi">
                     <div class="mb-3">
                         <label for="wilayah_id">Nama Wilayah</label>
                         <select class="form-control" id="wilayah_id" name="wilayah_id" required>
@@ -23,12 +23,12 @@
                         </select>
                     </div>
                     <div class="mb-3"> 
-                        <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
-                        <input type="text" class="form-control" id="nama_sekolah" name="nama_sekolah" required>
+                        <label for="nama_lokasi" class="form-label">Nama Lokasi</label>
+                        <input type="text" class="form-control" id="nama_lokasi" name="nama_lokasi" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nama_titik" class="form-label">Titik Wilayah</label>
-                        <input type="text" class="form-control" id="nama_titik" name="nama_titik" required>
+                        <label for="nama_cctv" class="form-label">Titik Wilayah</label>
+                        <input type="text" class="form-control" id="nama_cctv" name="nama_cctv" required>
                     </div>
                     <div class="mb-3">
                         <label for="link_stream" class="form-label">Link</label>

@@ -16,7 +16,7 @@
                                     placeholder="Search..." onkeyup="searchCctvPanorama()"
                                     style="height: 2.1rem; padding: 5px;">
                                 <a href="javascript:;" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#cctvsekolahModal" onclick="openAddModal()">Add</a>
+                                    data-bs-target="#cctvlokasiModal" onclick="openAddModal()">Add</a>
                             </div>
                             
                         </div>

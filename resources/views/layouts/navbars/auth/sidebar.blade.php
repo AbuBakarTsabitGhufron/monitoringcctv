@@ -29,7 +29,7 @@
     <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
                 aria-hidden="true" id="iconSidenav"></i>
-            <a class="align-items-center d-flex m-0 navbar-brand text-wrap" href="{{ route('sekolah.sekolah') }}">
+            <a class="align-items-center d-flex m-0 navbar-brand text-wrap" href="{{ route('dashboard') }}">
                 <img src="{{ asset('images/lifemedia_logo.png') }}" class="navbar-brand-img h-100" alt="...">
             </a>
     </div>
@@ -84,17 +84,17 @@
                 </a>
             </li>
 
-            <!-- CCTV Sekolah -->
+            <!-- CCTV Lokasi -->
             <li class="nav-item pb-2">
-                <a class="nav-link {{ Route::currentRouteName() == 'menu-sekolah' ? 'active' : '' }}"
-                    href="{{ route('menu-sekolah') }}">
+                <a class="nav-link {{ Route::currentRouteName() == 'menu-lokasi' ? 'active' : '' }}"
+                    href="{{ route('menu-lokasi') }}">
                     <div
-                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ Route::currentRouteName() == 'menu-sekolah' ? 'bg-gradient-primary text-white' : '' }}">
-                        <!-- CCTV Sekolah Icon (Sekolah) -->
-                        <i class="fas fa-book-open {{ Route::currentRouteName() == 'menu-sekolah' ? 'text-white' : 'text-dark' }}"
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center {{ Route::currentRouteName() == 'menu-lokasi' ? 'bg-gradient-primary text-white' : '' }}">
+                        <!-- CCTV Lokasi Icon (Lokasi) -->
+                        <i class="fas fa-book-open {{ Route::currentRouteName() == 'menu-lokasi' ? 'text-white' : 'text-dark' }}"
                             style="font-size: 0.7rem;"></i>
                     </div>
-                    <span class="nav-link-text ms-1">CCTV Sekolah</span>
+                    <span class="nav-link-text ms-1">CCTV Lokasi</span>
                 </a>
             </li>
 

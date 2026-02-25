@@ -3,29 +3,29 @@
 namespace App\Exports;
 
 use App\Models\Cctv; // Menggunakan model Cctv
-use App\Models\Sekolah;
+use App\Models\Lokasi;
 use App\Models\Wilayah;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Illuminate\Support\Facades\DB;
 
-class SekolahExport implements FromCollection, WithHeadings
+class LokasiExport implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        // Query untuk mengambil data CCTV, nama sekolah, dan nama wilayah
+        // Query untuk mengambil data CCTV, nama lokasi, dan nama wilayah
         $data = DB::table('cctvs')
-            ->join('sekolah', 'cctvs.sekolah_id', '=', 'sekolah.id')
+            ->join('lokasi', 'cctvs.lokasi_id', '=', 'lokasi.id')
             ->join('wilayah', 'cctvs.wilayah_id', '=', 'wilayah.id')
             ->select(
                 'wilayah.nama_wilayah as namaWilayah',
-                'sekolah.nama_sekolah as namaSekolah',
+                'lokasi.nama_lokasi as namaLokasi',
                 'cctvs.nama_titik as namaTitik',
                 'cctvs.link_stream as link'
             )
             ->orderBy('wilayah.nama_wilayah')
-            ->orderBy('sekolah.nama_sekolah')
+            ->orderBy('lokasi.nama_lokasi')
             ->orderBy('cctvs.nama_titik')
             ->get();
 
@@ -36,7 +36,7 @@ class SekolahExport implements FromCollection, WithHeadings
             $exportData[] = [
                 'No'            => $no++,
                 'Nama Wilayah'  => $row->namaWilayah,
-                'Nama Sekolah'  => $row->namaSekolah,
+                'Nama Lokasi'   => $row->namaLokasi,
                 'Nama Titik'    => $row->namaTitik,
                 'Link'          => $row->link,
             ];
@@ -47,6 +47,6 @@ class SekolahExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ['No', 'Nama Wilayah', 'Nama Sekolah', 'Nama Titik', 'Link'];
+        return ['No', 'Nama Wilayah', 'Nama Lokasi', 'Nama Titik', 'Link'];
     }
 }

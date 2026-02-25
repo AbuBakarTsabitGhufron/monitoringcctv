@@ -11,6 +11,6 @@ class HomeController extends Controller
     public function home()
     {
         $cctv = cctv::all();
-        return view('sekolah.index', compact('cctv'));
+        return view('lokasi.index'', compact('cctv'));
     }
 }

@@ -5,14 +5,14 @@
 
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold text-uppercase mb-0">Rekapan Jumlah CCTV Sekolah</h4>
+        <h4 class="fw-bold text-uppercase mb-0">Rekapan Jumlah CCTV Lokasi</h4>
         <a href="{{ route('dashboard') }}" class="btn btn-secondary">Kembali</a>
     </div>
 
     <div class="card">
         <div class="card-body table-responsive" id="tableContainer">
             <div class="d-flex justify-content-start gap-2 mb-3 flex-wrap">
-                <a href="{{ route('sekolah.export') }}" class="btn btn-success btn-sm">
+                <a href="{{ route('lokasi.export') }}" class="btn btn-success btn-sm">
                     <i class="fas fa-file-excel me-1"></i> Export
                 </a>
                 <button onclick="printTable()" class="btn btn-outline-secondary btn-sm">
@@ -23,13 +23,13 @@
             <div class="d-flex gap-3 mb-3 flex-wrap align-items-center">
                 <select id="filterWilayah" class="form-select w-25">
                     <option value="">Semua Wilayah</option>
-                    @foreach ($jumlahCCTVPerSekolah->pluck('namaWilayah')->unique() as $wilayah)
+                    @foreach ($jumlahCCTVPerLokasi->pluck('namaWilayah')->unique() as $wilayah)
                         <option value="{{ strtolower($wilayah) }}">{{ $wilayah }}</option>
                     @endforeach
                 </select>
 
-                <select id="jenisSekolahFilter" class="form-select w-25">
-                    <option value="">Semua Sekolah</option>
+                <select id="jenisLokasiFilter" class="form-select w-25">
+                    <option value="">Semua Lokasi</option>
                     <option value="sma">SMA</option>
                     <option value="smk">SMK</option>
                 </select>
@@ -62,19 +62,19 @@
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
-                        <th class="text-start">Nama Sekolah</th>
+                        <th class="text-start">Nama Lokasi</th>
                         <th class="text-start">Kabupaten / Kota</th>
                         <th>Jumlah CCTV</th>
                         <!-- Hapus kolom Detail -->
                     </tr>
                 </thead>
                 <tbody id="rekapBody">
-                    @forelse ($jumlahCCTVPerSekolah as $index => $sekolah)
-                        <tr data-sekolah-id="{{ $sekolah->sekolahId }}">
+                    @forelse ($jumlahCCTVPerLokasi as $index => $lokasi)
+                        <tr data-lokasi-id="{{ $lokasi->lokasiId }}">
                             <td class="nomor-urut"></td>
-                            <td class="text-start">{{ $sekolah->namaSekolah }}</td>
-                            <td class="text-start">{{ $sekolah->namaWilayah }}</td>
-                            <td><strong>{{ $sekolah->total_cctv }}</strong></td>
+                            <td class="text-start">{{ $lokasi->namaLokasi }}</td>
+                            <td class="text-start">{{ $lokasi->namaWilayah }}</td>
+                            <td><strong>{{ $lokasi->total_cctv }}</strong></td>
                             <!-- Hapus tombol detail -->
                         </tr>
                     @empty
@@ -136,17 +136,17 @@
 
     function updateFilteredRows() {
         const searchValue = document.getElementById('searchInput').value.toLowerCase();
-        const jenisValue = document.getElementById('jenisSekolahFilter').value.toLowerCase();
+        const jenisValue = document.getElementById('jenisLokasiFilter').value.toLowerCase();
         const wilayahValue = document.getElementById('filterWilayah').value;
 
         filteredRows = allRows.filter(row => {
-            const namaSekolah = row.children[1].innerText.toLowerCase();
+            const namaLokasi = row.children[1].innerText.toLowerCase();
             const namaWilayah = row.children[2].innerText.toLowerCase();
 
-            const matchSearch = namaSekolah.includes(searchValue) || namaWilayah.includes(searchValue);
+            const matchSearch = namaLokasi.includes(searchValue) || namaWilayah.includes(searchValue);
             const matchJenis = jenisValue === '' ||
-                (jenisValue === 'sma' && namaSekolah.startsWith('sma')) ||
-                (jenisValue === 'smk' && namaSekolah.startsWith('smk'));
+                (jenisValue === 'sma' && namaLokasi.startsWith('sma')) ||
+                (jenisValue === 'smk' && namaLokasi.startsWith('smk'));
             const matchWilayah = wilayahValue === '' || namaWilayah === wilayahValue;
 
             return matchSearch && matchJenis && matchWilayah;
@@ -206,7 +206,7 @@
     }
 
     document.getElementById('searchInput').addEventListener('input', updateFilteredRows);
-    document.getElementById('jenisSekolahFilter').addEventListener('change', updateFilteredRows);
+    document.getElementById('jenisLokasiFilter').addEventListener('change', updateFilteredRows);
     document.getElementById('filterWilayah').addEventListener('change', updateFilteredRows);
     document.getElementById('rowsPerPage').addEventListener('change', () => {
         currentPage = 1;
@@ -277,12 +277,12 @@
         // Get all filtered rows to print
         let tableContent = `
             <img src="${logoUrl}" class="watermark-logo" />
-            <h2>Rekapan Jumlah CCTV Sekolah</h2>
+            <h2>Rekapan Jumlah CCTV Lokasi</h2>
             <table>
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Nama Sekolah</th>
+                        <th>Nama Lokasi</th>
                         <th>Kabupaten / Kota</th>
                         <th>Jumlah CCTV</th>
                     </tr>
@@ -314,19 +314,19 @@
         printWindow.close();
     }
 
-    // Data detail CCTV per sekolah (dari PHP ke JS)
+    // Data detail CCTV per lokasi (dari PHP ke JS)
     const detailCCTV = @json($detailCCTV);
 
     // Show detail modal saat baris diklik
-    document.querySelectorAll('#rekapBody tr[data-sekolah-id]').forEach(row => {
+    document.querySelectorAll('#rekapBody tr[data-lokasi-id]').forEach(row => {
         row.addEventListener('click', function() {
-            const sekolahId = this.getAttribute('data-sekolah-id');
-            const rows = detailCCTV[sekolahId] || [];
+            const lokasiId = this.getAttribute('data-lokasi-id');
+            const rows = detailCCTV[lokasiId] || [];
             const modal = document.getElementById('detailModal');
             const tbody = modal.querySelector('#detailTable tbody');
             const title = modal.querySelector('#detailModalTitle');
-            const sekolahName = this.children[1].innerText;
-            title.textContent = 'Detail CCTV: ' + sekolahName;
+            const lokasiName = this.children[1].innerText;
+            title.textContent = 'Detail CCTV: ' + lokasiName;
             tbody.innerHTML = '';
             if (rows.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="2">Tidak ada data titik CCTV.</td></tr>';

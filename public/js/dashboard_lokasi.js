@@ -81,15 +81,15 @@ const cctvData = [];
 
 
 
-        function selectCCTV(namaSekolah, namaTitik) {
+        function selectCCTV(namaLokasi, namaTitik) {
             // Sembunyikan semua CCTV dulu
             const allCCTV = document.querySelectorAll('.cctv-card');
             allCCTV.forEach(card => {
                 card.style.display = 'none';
             });
 
-            // Temukan elemen CCTV berdasarkan nama sekolah dan titik
-            const targetId = `${slugify(namaSekolah)}-${slugify(namaTitik)}`;
+            // Temukan elemen CCTV berdasarkan nama lokasi dan titik
+            const targetId = `${slugify(namaLokasi)}-${slugify(namaTitik)}`;
             const selectedCCTV = document.getElementById(targetId);
             
             if (selectedCCTV) {
@@ -126,7 +126,7 @@ const cctvData = [];
                 const card = document.createElement('div');
                 card.className = 'cctv-card';
                 card.id = id;
-                card.setAttribute('data-sekolah', slugify(cctv.school));
+                card.setAttribute('data-lokasi', slugify(cctv.school));
                 card.setAttribute('data-wilayah', cctv.wilayah);
                 card.setAttribute('data-titik', cctv.location);
                 card.style.display = 'none';

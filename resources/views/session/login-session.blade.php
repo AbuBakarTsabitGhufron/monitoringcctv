@@ -9,7 +9,7 @@
 
                 <!-- Form Section -->
                 <div class="form-section p-5 flex-fill d-flex flex-column justify-content-center" style="width: 50%;">
-                    <h4 class="text-dark fw-bold mb-4 text-center">SISTEM MONITORING CCTV SEKOLAH</h4>
+                    <h4 class="text-dark fw-bold mb-4 text-center">SISTEM MONITORING CCTV LOKASI</h4>
                     <!-- Gambar untuk mobile, tampil hanya di mobile -->
                     <div class="d-block d-md-none mb-4 text-center">
                         <img src="{{ asset('images/logocctv.jpg') }}" alt="CCTV" style="max-width: 200px; width: 100%; height: auto;">

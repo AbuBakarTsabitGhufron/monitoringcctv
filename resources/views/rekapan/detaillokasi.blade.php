@@ -5,41 +5,41 @@
 
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold text-uppercase mb-0">Daftar Sekolah</h4>
+        <h4 class="fw-bold text-uppercase mb-0">Daftar Lokasi</h4>
         <a href="{{ route('dashboard') }}" class="btn btn-secondary">← Kembali</a>
     </div>
 
     <div class="card">
         <div class="card-body table-responsive">
-            <input type="text" id="searchInput" class="form-control mb-3 w-25" placeholder="Cari nama sekolah atau kota...">
+            <input type="text" id="searchInput" class="form-control mb-3 w-25" placeholder="Cari nama lokasi atau kota...">
 
-            <table class="table table-hover align-middle text-center" id="sekolahTable">
+            <table class="table table-hover align-middle text-center" id="lokasiTable">
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
-                        <th>Nama Sekolah</th>
+                        <th>Nama Lokasi</th>
                         <th>Kabupaten / Kota</th>
                     </tr>
                 </thead>
-                <tbody id="sekolahBody">
+                <tbody id="lokasiBody">
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama Sekolah</th>
+                                <th>Nama Lokasi</th>
                                 <th>Wilayah</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($sekolah as $index => $item)
+                            @forelse ($lokasi as $index => $item)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $item->nama_sekolah }}</td>
+                                    <td>{{ $item->nama_lokasi }}</td>
                                     <td>{{ $item->wilayah->nama_wilayah ?? 'Wilayah tidak ditemukan' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center">Tidak ada data sekolah</td>
+                                    <td colspan="3" class="text-center">Tidak ada data lokasi</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -56,7 +56,7 @@
 </div>
 
 <script>
-    const rows = Array.from(document.querySelectorAll('#sekolahBody tr'));
+    const rows = Array.from(document.querySelectorAll('#lokasiBody tr'));
     const rowsPerPage = 10;
     let currentPage = 1;
 

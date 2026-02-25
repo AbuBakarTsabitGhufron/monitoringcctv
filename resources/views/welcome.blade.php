@@ -214,7 +214,7 @@
 </head>
 
 @php
-    $groupedSekolah = $sekolah->groupBy('namaWilayah');
+    $groupedLokasi = $lokasi->groupBy('namaWilayah');
 @endphp
 
 
@@ -230,13 +230,13 @@
         <!-- Sidebar (Kiri) -->
         <div class="col-md-3 sidebar">
             <div class="list-group">
-                @foreach($groupedSekolah as $wilayah => $sekolahGroup)
+                @foreach($groupedLokasi as $wilayah => $lokasiGroup)
                     <a href="javascript:void(0);" class="list-group-item list-group-item-action"
                         onclick="toggleDaerah('{{ Str::slug($wilayah) }}', this)">
                         {{ $wilayah }}
                     </a>
                     <div id="{{ Str::slug($wilayah) }}" class="wilayah-container">
-                        @foreach($sekolahGroup as $cctv)
+                        @foreach($lokasiGroup as $cctv)
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="checkbox-{{ Str::slug($cctv->namaTitik) }}"
                                     onclick="toggleCCTV('{{ Str::slug($cctv->namaTitik) }}', this)">
@@ -254,12 +254,12 @@
         <!-- Main Content (Kanan) -->
         <div class="col-md-9 content">
             <div class="row">
-                @foreach($groupedSekolah as $wilayah => $sekolahGroup)
-                    @foreach($sekolahGroup as $cctv)
+                @foreach($groupedLokasi as $wilayah => $lokasiGroup)
+                    @foreach($lokasiGroup as $cctv)
                         <div class="col-md-4 cctv-view" id="{{ Str::slug($cctv->namaTitik) }}" style="display: none;">
                             <div class="card">
                                 <h5 class="card-title text-center mb-3">
-                                    {{ $cctv->namaSekolah }}<br>
+                                    {{ $cctv->namaLokasi }}<br>
                                     {{ $cctv->namaTitik }}
                                 </h5>
                                 <div class="iframe-container">

@@ -1,4 +1,4 @@
-<table class="table align-items-center mb-0" id="sekolah-table">
+<table class="table align-items-center mb-0" id="lokasi-table">
     <thead>
         <tr>
             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -10,7 +10,7 @@
             <th class="text-secondary opacity-7"></th>
         </tr>
     </thead>
-    <tbody id="sekolah-tbody">
+    <tbody id="lokasi-tbody">
         <!-- Data akan diisi di sini -->
     </tbody>
 </table>

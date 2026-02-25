@@ -20,10 +20,10 @@ class Wilayah extends Model
         'nama_wilayah',
     ];
 
-    // Relasi ke tabel sekolah (jika dibutuhkan)
-    public function sekolahs()
+    // Relasi ke tabel lokasi (jika dibutuhkan)
+    public function lokasis()
     {
-        return $this->hasMany(Sekolah::class, 'wilayah_id');
+        return $this->hasMany(Lokasi::class, 'wilayah_id');
     }
 
     // Relasi ke tabel cctvs (jika dibutuhkan)
