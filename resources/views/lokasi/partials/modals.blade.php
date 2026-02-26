@@ -14,11 +14,11 @@
                         <label for="wilayah_id">Nama Wilayah</label>
                         <select class="form-control" id="wilayah_id" name="wilayah_id" required>
                             <option value="" disabled selected>Pilih Wilayah</option>
-                            <option value="1">KOTA JOGJA</option>
-                            <option value="2">KABUPATEN BANTUL</option>
+                            <option value="1">KABUPATEN BANTUL</option>
+                            <option value="2">KOTA YOGYAKARTA</option>
                             <option value="3">KABUPATEN SLEMAN</option>
-                            <option value="4">KABUPATEN GUNUNG KIDUL</option>
-                            <option value="5">KABUPATEN KULON PROGO</option>
+                            <option value="4">KABUPATEN KULON PROGO</option>
+                            <option value="5">KABUPATEN GUNUNG KIDUL</option>
                             <option value="6">KHUSUS</option>
                         </select>
                     </div>
