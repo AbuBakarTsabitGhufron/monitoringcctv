@@ -272,9 +272,6 @@
                         </h5>
                     </div>
                     <div class="col-md-6 text-md-end">
-                        <a href="{{ route('panorama.panorama') }}" class="btn btn-sm btn-outline-primary me-2" title="Buka Panorama Publik" aria-label="Buka Panorama Publik">
-                            <i class="fas fa-camera-retro me-1"></i> CCTV Panorama
-                        </a>
                         <div class="badge bg-success fs-6 mb-2">
                             <i class="fas fa-shield-alt me-1"></i>
                             Sistem Normal

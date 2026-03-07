@@ -19,7 +19,10 @@
                             <option value="3">KABUPATEN SLEMAN</option>
                             <option value="4">KABUPATEN KULON PROGO</option>
                             <option value="5">KABUPATEN GUNUNG KIDUL</option>
-                            <option value="6">KHUSUS</option>
+                            <option value="7">ATCS KOTA</option>
+                            <option value="8">ATCS DIY</option>
+                            <option value="9">MALIOBORO</option>
+                            <option value="10">PANORAMA</option>
                         </select>
                     </div>
                     <div class="mb-3"> 

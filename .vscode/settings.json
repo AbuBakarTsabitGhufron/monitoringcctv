@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd /root/Project/monitoringcctv && php artisan db:seed --class=WilayahSeeder$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

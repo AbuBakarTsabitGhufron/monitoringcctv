@@ -30,10 +30,11 @@ class ManualImportController extends Controller
             unset($rows[0]); // header
 
             $importedCount = 0;
+            $skippedCount  = 0;
 
             foreach ($rows as $row) {
                 // Pastikan baris data memiliki setidaknya 4 kolom
-                if (count($row) < 4) continue;
+                if (count($row) < 4) { $skippedCount++; continue; }
                 
                 // Skip empty rows
                 if (empty($row[0]) && empty($row[1]) && empty($row[2]) && empty($row[3])) continue;
@@ -44,7 +45,7 @@ class ManualImportController extends Controller
                 $linkStream  = trim($row[3]);
 
                 // Skip if essential fields are empty
-                if (empty($namaWilayah) || empty($namaLokasi) || empty($namaTitik)) continue;
+                if (empty($namaWilayah) || empty($namaLokasi)) { $skippedCount++; continue; }
 
                 // Cari atau buat wilayah
                 $wilayah = Wilayah::firstOrCreate(['nama_wilayah' => $namaWilayah]);
@@ -73,14 +74,38 @@ class ManualImportController extends Controller
                 $importedCount++;
             }
 
+            $message = "Import berhasil! {$importedCount} data CCTV ditambahkan.";
+            if ($skippedCount > 0) {
+                $message .= " ({$skippedCount} baris dilewati karena data tidak lengkap)";
+            }
+            if ($importedCount === 0) {
+                $message = "Tidak ada data yang diimport. Pastikan format file sesuai template.";
+            }
+
+            // Jika request AJAX, kembalikan JSON
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => $importedCount > 0,
+                    'message' => $message,
+                    'imported' => $importedCount,
+                    'skipped'  => $skippedCount,
+                ]);
+            }
+
             return back()->with('swal', [
-                'status' => 'success',
-                'message' => "Import berhasil! {$importedCount} data CCTV telah ditambahkan."
+                'status'  => $importedCount > 0 ? 'success' : 'warning',
+                'message' => $message,
             ]);
         } catch (\Exception $e) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Import gagal: ' . $e->getMessage(),
+                ], 500);
+            }
             return back()->with('swal', [
-                'status' => 'error',
-                'message' => 'Import gagal: ' . $e->getMessage()
+                'status'  => 'error',
+                'message' => 'Import gagal: ' . $e->getMessage(),
             ]);
         }
     }

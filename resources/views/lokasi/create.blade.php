@@ -118,11 +118,15 @@
                     <label for="namaWilayah">Nama Wilayah</label>
                     <select class="form-control" id="namaWilayah" name="namaWilayah" style="width: 402px;" required>
                         <option value="">Pilih Wilayah</option>
-                        <option value="KOTA JOGJA">KOTA JOGJA</option>
-                        <option value="KABUPATEN SLEMAN">KAB SLEMAN</option>
-                        <option value="KABUPATEN BANTUL">KAB BANTUL</option>
-                        <option value="KABUPATEN KULON PROGO">KAB KULON PROGO</option>
-                        <option value="KABUPATEN GUNUNG KIDUL">KAB GUNUNG KIDUL</option>
+                        <option value="KABUPATEN BANTUL">KABUPATEN BANTUL</option>
+                        <option value="KOTA YOGYAKARTA">KOTA YOGYAKARTA</option>
+                        <option value="KABUPATEN SLEMAN">KABUPATEN SLEMAN</option>
+                        <option value="KABUPATEN KULON PROGO">KABUPATEN KULON PROGO</option>
+                        <option value="KABUPATEN GUNUNG KIDUL">KABUPATEN GUNUNG KIDUL</option>
+                        <option value="ATCS KOTA">ATCS KOTA</option>
+                        <option value="ATCS DIY">ATCS DIY</option>
+                        <option value="MALIOBORO">MALIOBORO</option>
+                        <option value="PANORAMA">PANORAMA</option>
                     </select>
                 </div>
                 <div class="form-group">

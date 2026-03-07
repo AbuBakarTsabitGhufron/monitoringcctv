@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\cctv;
+use App\Models\Cctv;
 
-class cctvController extends Controller
+class CctvController extends Controller
 {
     public function __construct()
     {
@@ -16,13 +16,13 @@ class cctvController extends Controller
 
     public function index()
     {
-        $cctv = cctv::all();
+        $cctv = Cctv::all();
         return view('cctv.index', compact('cctv'));
     }
 
     public function edit($id)
     {
-        $cctv = cctv::find($id);
+        $cctv = Cctv::find($id);
         return view('cctv.edit', compact('cctv'));
     }
 
@@ -82,6 +82,6 @@ class cctvController extends Controller
     // Helper: define "active" as having a non-empty link.
     private function getActiveCctvCount(): int
     {
-        return cctv::whereNotNull('link')->where('link', '!=', '')->count();
+        return Cctv::whereNotNull('link_stream')->where('link_stream', '!=', '')->count();
     }
 }

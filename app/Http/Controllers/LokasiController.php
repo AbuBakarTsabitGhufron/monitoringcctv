@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Cctv;
 use App\Models\Lokasi;
 use App\Models\Wilayah;
-use App\Models\Panorama;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -18,11 +17,7 @@ class LokasiController extends Controller
     public function dashboard()
     {
         // Hitung total jumlah CCTV dari tabel cctvs yang terhubung dengan lokasi
-        // Ini akan memberikan total semua CCTV lokasi, bukan hanya jumlah lokasi.
         $lokasiCount = Cctv::whereNotNull('lokasi_id')->count();
-
-        // Hitung total jumlah panorama
-        $panoramaCount = Panorama::count();
 
         // Hitung total jumlah user
         $userCount = User::count();
@@ -48,7 +43,7 @@ class LokasiController extends Controller
             ->get();
 
         return view('admin.dashboard', compact(
-            'lokasiCount', 'panoramaCount', 'userCount',
+            'lokasiCount', 'userCount',
             'jumlahLokasiPerWilayah', 'jumlahCCTVPerWilayah', 'jumlahCCTVPerLokasi'
         ));
     }

@@ -11,6 +11,18 @@ let itemsPerPage = 10;
 
 // 1. Ambil data dari API
 function loadLokasiData() {
+    // Tampilkan loading state di tabel
+    const tbody = document.getElementById("lokasi-tbody");
+    if (tbody) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center py-4 text-muted">
+                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                    Memuat data...
+                </td>
+            </tr>`;
+    }
+
     fetch("/api/cctvlokasi", { headers: { Accept: "application/json" } })
         .then((res) => res.json())
         .then((json) => {

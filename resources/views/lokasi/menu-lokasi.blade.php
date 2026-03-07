@@ -27,11 +27,14 @@
                                     <a href="{{ route('lokasi.template.download') }}" class="btn btn-outline-secondary btn-sm">
                                         Template
                                     </a>
-                                    <form action="{{ route('lokasi.import.manual') }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        <input type="file" name="file" accept=".xlsx,.xls" onchange="this.form.submit()" style="display: none;" id="uploadExcelInput">
-                                        <button type="button" class="btn btn-success btn-sm" onclick="document.getElementById('uploadExcelInput').click()">Import Excel</button>
-                                    </form>
+                                    {{-- Import Excel (AJAX – no full-page redirect) --}}
+                                    <input type="file" name="file" accept=".xlsx,.xls"
+                                           id="uploadExcelInput" style="display:none;"
+                                           onchange="doImportExcel(this)">
+                                    <button type="button" class="btn btn-success btn-sm"
+                                            onclick="document.getElementById('uploadExcelInput').click()">
+                                        Import Excel
+                                    </button>
                                     <a href="javascript:;" class="btn btn-primary btn-sm"
                                         data-bs-toggle="modal" data-bs-target="#cctvlokasiModal"
                                         onclick="openAddModal()">Add</a>
@@ -89,20 +92,46 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
     <script>
         const csrfToken = "{{ csrf_token() }}";
-        const token = Cookies.get('token') || ''; // kalau pakai auth header
+        const token = Cookies.get('token') || '';
+
+        // ── Import Excel via AJAX (no full-page redirect) ──────────────────
+        function doImportExcel(input) {
+            if (!input.files || !input.files[0]) return;
+
+            const file = input.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('_token', csrfToken);
+
+            // Reset input so the same file can be re-selected later
+            input.value = '';
+
+            Swal.fire({
+                title: 'Mengimport data...',
+                text: 'Mohon tunggu sebentar.',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading(),
+            });
+
+            fetch("{{ route('lokasi.import.manual') }}", {
+                method: 'POST',
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+                body: formData,
+            })
+            .then(res => res.json())
+            .then(res => {
+                const icon  = res.success ? 'success' : (res.imported === 0 ? 'warning' : 'error');
+                const title = res.success ? 'Berhasil!' : (res.imported === 0 ? 'Perhatian' : 'Gagal');
+                Swal.fire({ icon, title, text: res.message, timer: 3000, showConfirmButton: false });
+                // Refresh table regardless of result (data may have partially imported)
+                loadLokasiData();
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire('Error', 'Terjadi kesalahan saat mengimport.', 'error');
+            });
+        }
     </script>
     <!-- Custom Script -->
     <script src="{{ asset('js/lokasi.js') }}"></script>
-    @if(session('swal'))
-    <script>
-        Swal.fire({
-            icon: '{{ session('swal.status') }}', // success atau error
-            title: '{{ session('swal.status') === 'success' ? 'Berhasil' : 'Gagal' }}',
-            text: '{{ session('swal.message') }}',
-            showConfirmButton: false,
-            timer: 2000
-        });
-    </script>
-@endif
-
 @endpush

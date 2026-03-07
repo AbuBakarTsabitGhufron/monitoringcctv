@@ -151,20 +151,6 @@
                         </div>
                     </a>
                 </div>
-
-                <div class="card" style="background-color: rgba(71,71,161,255); cursor: pointer;">
-                    <a href="{{ route('rekapan.cctv.panorama') }}" style="text-decoration: none;">
-                        <div class="card-content">
-                            <div class="left-column">
-                                <h6 style="color: white; font-size: 13pt;">CCTV Panorama</h6>
-                                <p style="color: white; font-size: 24pt;" class="fs-30 mb-2">{{ $panoramaCount }}</p>
-                            </div>
-                            <div class="right-column">
-                                <i class="fas fa-earth-americas icon-card"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
             </div>
 
             <div class="card-row">

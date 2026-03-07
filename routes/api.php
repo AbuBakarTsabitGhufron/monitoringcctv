@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\ApiLokasiController;
-use App\Http\Controllers\Api\ApiPanoramaController;
 use App\Http\Controllers\Api\ApiUsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -13,8 +12,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::apiResource('cctvlokasi', ApiLokasiController::class);
-
-Route::apiResource('cctvpanorama', ApiPanoramaController::class);
 
 Route::apiResource('users', ApiUsersController::class);
 

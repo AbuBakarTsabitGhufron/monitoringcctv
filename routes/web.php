@@ -9,10 +9,9 @@ use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\LokasiController;
-use App\Http\Controllers\PanoramaController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\CctvController;
-use App\Http\Controllers\VideoController;
+use App\Http\Controllers\Videocontroller as VideoController;
 use App\Http\Controllers\ManualImportController;
 use App\Http\Controllers\TemplateController;
 
@@ -39,7 +38,6 @@ Route::middleware('guest')->group(function () {
 // =====================
 Route::middleware('auth')->group(function () {
     Route::get('/', [LokasiController::class, 'cctvlokasi'])->name('lokasi.index');
-    Route::get('/cctv-publik', [PanoramaController::class, 'dashboard'])->name('panorama.panorama');
 
     Route::get('/dashboard', [LokasiController::class, 'dashboard'])
         ->middleware('role:admin')
@@ -49,7 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::get('user-management', fn() => view('users.menu-users'))->name('user-management');
 
     Route::get('cctv-lokasi', [LokasiController::class, 'index'])->name('menu-lokasi');
-    Route::get('menu-cctv-panorama', [PanoramaController::class, 'index'])->name('menu-panorama');
 
     Route::get('billing', fn() => view('billing'))->name('billing');
     Route::get('profile', fn() => view('profile'))->name('profile');
@@ -118,25 +115,6 @@ Route::prefix('lokasi')->group(function () {
 // Rekapan Lokasi
 Route::get('/rekapan/cctv-lokasi', [LokasiController::class, 'showRekapanCCTV'])->name('rekapan.cctv.lokasi');
 Route::get('/rekapan/detaillokasi', [LokasiController::class, 'daftarLokasi'])->name('rekapan.detaillokasi');
-
-// =====================
-// 🌄 PANORAMA ROUTES
-// =====================
-// Route::get('/cctv-publik', [PanoramaController::class, 'dashboard'])->name('panorama.panorama');
-Route::prefix('panorama')->group(function () {
-    Route::get('/index', [PanoramaController::class, 'index'])->name('panorama.index');
-    Route::post('/store', [PanoramaController::class, 'store'])->name('panorama.store');
-    Route::post('/{id}', [PanoramaController::class, 'update'])->name('panorama.update');
-    Route::delete('/{id}', [PanoramaController::class, 'delete'])->name('panorama.delete');
-    Route::get('/cctv/export', [PanoramaController::class, 'export'])->name('panorama.export');
-    
-        // Import manual panorama (POST only, for AJAX)
-        Route::post('/import/manual', [PanoramaController::class, 'importManual'])->name('panorama.import.manual');
-});
-
-// Rekapan Panorama
-Route::get('/rekapan/cctv-panorama', [PanoramaController::class, 'showPanorama'])->name('rekapan.cctv.panorama');
-Route::get('/rekapan/cctv-panorama/{wilayah}', [PanoramaController::class, 'detailWilayah'])->name('rekapan.cctv.panorama.detail');
 
 // Rekapan User
 Route::get('/rekapan/users', [InfoUserController::class, 'daftarAdmin'])->name('rekapan.users');
