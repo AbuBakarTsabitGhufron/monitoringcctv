@@ -37,14 +37,14 @@ Route::middleware('guest')->group(function () {
 // 🔒 AUTH ROUTES
 // =====================
 Route::middleware('auth')->group(function () {
-    Route::get('/', [LokasiController::class, 'cctvlokasi'])->name('lokasi.index');
+    Route::get('/', [LokasiController::class, 'cctvlokasi'])->name('home');
 
     Route::get('/dashboard', [LokasiController::class, 'dashboard'])
         ->middleware('role:admin')
         ->name('dashboard');
 
 
-    Route::get('user-management', fn() => view('users.menu-users'))->name('user-management');
+    Route::get('user-management', fn() => view('users.menu-users'))->middleware('role:admin')->name('user-management');
 
     Route::get('cctv-lokasi', [LokasiController::class, 'index'])->name('menu-lokasi');
 
@@ -80,7 +80,7 @@ Route::get('/diy', [HomeController::class, 'home'])->name('welcome');
 // =====================
 // 📹 CCTV ROUTES
 // =====================
-Route::prefix('cctv')->group(function () {
+Route::prefix('cctv')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/', [CctvController::class, 'index'])->name('cctv.index');
     Route::get('/create', [CctvController::class, 'create'])->name('cctv.create');
     Route::post('/', [CctvController::class, 'store'])->name('cctv.store');
@@ -93,7 +93,7 @@ Route::prefix('cctv')->group(function () {
 // =====================
 // 📍 LOKASI ROUTES
 // =====================
-Route::prefix('lokasi')->group(function () {
+Route::prefix('lokasi')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/index', [LokasiController::class, 'index'])->name('lokasi.index');
     Route::get('/create', [LokasiController::class, 'create'])->name('lokasi.create');
     Route::post('/', [LokasiController::class, 'store'])->name('lokasi.store');
@@ -112,9 +112,9 @@ Route::prefix('lokasi')->group(function () {
     Route::post('/import/manual', [ManualImportController::class, 'import'])->name('lokasi.import.manual');
 });
 
-// Rekapan Lokasi
-Route::get('/rekapan/cctv-lokasi', [LokasiController::class, 'showRekapanCCTV'])->name('rekapan.cctv.lokasi');
-Route::get('/rekapan/detaillokasi', [LokasiController::class, 'daftarLokasi'])->name('rekapan.detaillokasi');
-
-// Rekapan User
-Route::get('/rekapan/users', [InfoUserController::class, 'daftarAdmin'])->name('rekapan.users');
+// Rekapan Lokasi & User (Admin Only)
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/rekapan/cctv-lokasi', [LokasiController::class, 'showRekapanCCTV'])->name('rekapan.cctv.lokasi');
+    Route::get('/rekapan/detaillokasi', [LokasiController::class, 'daftarLokasi'])->name('rekapan.detaillokasi');
+    Route::get('/rekapan/users', [InfoUserController::class, 'daftarAdmin'])->name('rekapan.users');
+});

@@ -143,7 +143,7 @@
                         </span>
                     </button>
                     <span class="fw-semibold small">Admin Monitoring CCTV</span>
-                    <a href="{{ route('lokasi.index') }}" class="d-inline-flex align-items-center p-2">
+                    <a href="{{ auth()->check() && auth()->user()->role === 'admin' ? route('lokasi.index') : route('home') }}" class="d-inline-flex align-items-center p-2">
                         <img src="{{ asset('images/lifemedia_logo.png') }}" alt="Logo" style="height:32px; width:auto;">
                     </a>
                 </div>

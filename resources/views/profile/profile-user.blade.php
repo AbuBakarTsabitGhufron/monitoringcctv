@@ -119,12 +119,12 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container">
-            <a href="{{ route('lokasi.index') }}" class="navbar-brand">
+            <a href="{{ auth()->user()->role === 'admin' ? route('lokasi.index') : route('home') }}" class="navbar-brand">
                 <i class="fas fa-video text-primary me-2"></i>
                 <strong>CCTV Lokasi DIY</strong>
             </a>
             <div class="ms-auto">
-                <a href="{{ route('lokasi.index') }}" class="btn btn-outline-primary">
+                <a href="{{ auth()->user()->role === 'admin' ? route('lokasi.index') : route('home') }}" class="btn btn-outline-primary">
                     <i class="fas fa-arrow-left me-1"></i>Kembali ke Dashboard
                 </a>
             </div>

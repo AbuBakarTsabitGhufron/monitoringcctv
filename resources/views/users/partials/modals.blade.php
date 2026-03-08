@@ -26,7 +26,7 @@
                         <label for="role" class="form-label">Role</label>
                         <select class="form-control" id="role" name="role" required>
                             <option value="admin">Admin</option>
-                            <option value="pengunjung">Pengunjung</option>
+                            <option value="pengguna">Pengguna</option>
                         </select>
                     </div>
                     <div class="modal-footer">

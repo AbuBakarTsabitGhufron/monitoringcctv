@@ -3,6 +3,10 @@
         "/^cd /root/Project/monitoringcctv && php artisan db:seed --class=WilayahSeeder$/": {
             "approve": true,
             "matchCommandLine": true
+        },
+        "/^cd /root/Project/monitoringcctv && php artisan tinker --execute=\"print_r\\(DB::select\\(\\\\\"SHOW COLUMNS FROM users LIKE 'role'\\\\\"\\)\\);\" 2>&1 \\| cat$/": {
+            "approve": true,
+            "matchCommandLine": true
         }
     }
 }
